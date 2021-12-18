@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+  ynvest-db:
+    image: mariadb
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ynvest
+      MYSQL_USER: ${db_username}
+      MYSQL_ROOT_PASSWORD: ${db_root_password}
+

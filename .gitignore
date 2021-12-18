@@ -1,0 +1,30 @@
+### Docker ###
+db-data/
+.env
+
+### Maven ###
+target/
+mvnw
+mvnw.cmd
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### MacOS ###
+.DS_Store
+
+### Div ###
+*.pptx
+.mvn
