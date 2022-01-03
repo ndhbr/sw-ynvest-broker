@@ -1,0 +1,21 @@
+<div th:fragment="login">
+    <div class="form-signin">
+        <form method="post" th:action="@{/login}" th:object="${customer}">
+            <h1 class="h3 mb-3 fw-normal">Login</h1>
+            <p>Du hast noch keinen Account? Dann <a th:href="@{/register}">registriere</a> dich jetzt kostenlos.</p>
+
+            <div th:if="${param.error}">
+                <div class="alert alert-danger">
+                    Falsche E-Mail Adresse oder Passwort.
+                </div>
+            </div>
+
+            <div class="form-input-group">
+                <input type="email" th:field="*{email}" class="form-control form-control-dark" id="email" placeholder="E-Mail Adresse">
+                <input type="password" th:field="*{password}" class="form-control form-control-dark" id="password" placeholder="Passwort">
+            </div>
+
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Einloggen</button>
+        </form>
+    </div>
+</div>

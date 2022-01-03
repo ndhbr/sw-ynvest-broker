@@ -28,3 +28,7 @@ mvnw.cmd
 ### Div ###
 *.pptx
 .mvn
+
+### Node ###
+node_modules/**
+node/**

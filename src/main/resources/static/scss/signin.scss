@@ -1,0 +1,25 @@
+.form-signin {
+    width: 100%;
+    max-width: 600px;
+    padding: 15px;
+    margin: 16px auto;
+}
+
+.form-input-group .form-control:not(:first-child,:last-child) {
+    border-radius: 0;
+}
+
+.form-input-group .form-control:first-child {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.form-input-group .form-control:last-child {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-bottom: 16px;
+}
+
+button[type="submit"] {
+    margin-top: 8px;
+}

@@ -1,0 +1,41 @@
+.portfolio-value {
+    font-size: 3em;
+    font-weight: bold;
+}
+
+td {
+    line-height: 1.8em;
+}
+
+.subbed {
+    font-size: 1.2rem;
+    vertical-align: baseline;
+    padding-left: 8px;
+}
+
+span.stock-positive {
+    color: var(--bs-green);
+}
+
+span.stock-negative {
+    color: var(--bs-red);
+}
+
+#portfolio-actions,
+#portfolio-values {
+    margin-top: 48px;
+}
+
+/* Tablet */
+@media (max-width: 767px) {
+    .portfolio-value {
+        font-size: 2em;
+    }
+}
+
+/* Mobile */
+@media (max-width: 575px) {
+    .portfolio-value {
+        font-size: 1.5em;
+    }
+}
