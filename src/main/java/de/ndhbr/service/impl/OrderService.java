@@ -62,6 +62,10 @@ public class OrderService implements OrderServiceIF {
                 portfolio.insertShare(share);
             }
 
+            // TODO: Call Amann Bank transfer money
+            // -> 0,99 ct to my bank account
+            // -> Amount to stock exchange (yetra)
+
             portfolioService.savePortfolio(portfolio);
             order.setStatus(OrderStatus.Completed);
 

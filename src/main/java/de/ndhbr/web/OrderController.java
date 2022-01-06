@@ -67,10 +67,13 @@ public class OrderController {
             customerService.addOrder(addedOrder);
 
             // Remove virtual money
-            bankAccount.decreaseVirtualBalance(addedOrder.getQuantity() * addedOrder.getUnitPrice());
-            bankAccount.decreaseVirtualBalance(0.99); // TODO: export constant
-            // TODO: decrease real balance
-            bankAccountService.saveBankAccount(bankAccount);
+            if (addedOrder.getType().equals(OrderType.Buy)) {
+                bankAccountService.handleNewBuyOrder(bankAccount,
+                        addedOrder.getQuantity() * addedOrder.getUnitPrice());
+            } else {
+                bankAccountService.handleNewSellOrder(bankAccount,
+                        addedOrder.getQuantity() * addedOrder.getUnitPrice());
+            }
         } catch (ServiceException e) {
             model.addAttribute("error", e.getMessage());
         }

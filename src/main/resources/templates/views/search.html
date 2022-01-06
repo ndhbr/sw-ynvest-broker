@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<div th:fragment="search" class="p-3">
+    <h1 class="h2">Suchergebnisse</h1>
+    <small class="text-muted">für <label th:text="${query}"></label></small>
+
+    <hr/>
+
+    <div class="card">
+        <div class="list-group list-group-flush">
+            <th:block th:each="i: ${#numbers.sequence(1, 10)}">
+                <a th:href="@{'/portfolio/share?isin=DE0005140008'}"
+                   class="list-group-item list-group-item-action">
+                    <label th:text="${query}"></label> Ltd.
+                    <small class="text-muted">DE0005140008</small>
+                </a>
+            </th:block>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

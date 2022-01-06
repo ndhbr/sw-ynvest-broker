@@ -5,6 +5,10 @@
     margin: 16px auto;
 }
 
+.form-signin button[type="submit"] {
+    margin-top: 8px;
+}
+
 .form-input-group .form-control:not(:first-child,:last-child) {
     border-radius: 0;
 }
@@ -18,8 +22,4 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     margin-bottom: 16px;
-}
-
-button[type="submit"] {
-    margin-top: 8px;
 }

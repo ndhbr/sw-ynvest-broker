@@ -1,9 +1,6 @@
 package de.ndhbr.web;
 
-import de.ndhbr.entity.BankAccount;
-import de.ndhbr.entity.Customer;
-import de.ndhbr.entity.Portfolio;
-import de.ndhbr.entity.Share;
+import de.ndhbr.entity.*;
 import de.ndhbr.service.CustomerServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,12 +43,23 @@ public class PortfolioController {
     public String share(@RequestParam String isin, Locale locale, ModelMap model, Principal user) {
         Customer customer = customerService.getCustomerByEmail(user.getName());
         Portfolio portfolio = customer.getPortfolio();
+        BankAccount bankAccount = customer.getBankAccount();
         Share share = new Share();
         Optional<Share> userShare = portfolio.getShareByIsin(isin);
+        StockOrder stockOrder = new StockOrder();
 
-        userShare.ifPresent(value -> share.setQuantity(value.getQuantity()));
+        userShare.ifPresent(value -> {
+            share.setQuantity(value.getQuantity());
+            stockOrder.setQuantity(value.getQuantity());
+        });
         share.setIsin(isin);
+        stockOrder.setIsin(isin);
 
+        // TODO: Fetch from Stefan
+        stockOrder.setUnitPrice(100);
+
+        model.addAttribute("stockOrder", stockOrder);
+        model.addAttribute("virtualBalance", bankAccount.getVirtualBalance());
         model.addAttribute("share", share);
         model.addAttribute("content", "share");
         return "index";

@@ -11,7 +11,7 @@
         </button>
     </p>
     <div class="collapse" id="collapseNewOrder">
-        <div class="card bg-dark card-body">
+        <div class="card card-body">
             <form method="post" th:action="@{/orders}" th:object="${stockOrder}">
                 <div class="form-input-group">
                     <input type="text" th:field="*{isin}" class="form-control form-control-dark" id="ISIN"

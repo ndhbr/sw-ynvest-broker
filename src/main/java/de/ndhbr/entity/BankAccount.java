@@ -87,6 +87,10 @@ public class BankAccount extends SingleIdEntity<String> {
         }
     }
 
+    public void increaseVirtualBalance(double amount) {
+        this.virtualBalance += amount;
+    }
+
     @Override
     public String getID() {
         return iban;

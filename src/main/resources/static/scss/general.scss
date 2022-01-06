@@ -1,5 +1,29 @@
-/* Bootstrap */
+/* Bootstrap Overrides */
 $primary: #125c00;
+$white: #ffffff;
+$black: #000000;
+$dark: #212529;
+$greyOnDark: rgba(255, 255, 255, .1);
+$lGreyOnDark: rgba(255, 255, 255, .2);
+$llGreyOnDark: rgba(255, 255, 255, .3);
+
+/* List groups */
+$list-group-color: $white;
+$list-group-bg: $greyOnDark;
+$list-group-action-hover-color: $white;
+$list-group-hover-bg: $lGreyOnDark;
+$list-group-action-active-color: $white;
+$list-group-action-active-bg: $llGreyOnDark;
+
+/* Cards */
+$card-bg: $dark;
+
+/* Modals */
+$modal-content-bg: $dark;
+$modal-content-border-color: rgba($black, .2);
+$modal-header-border-color: $modal-content-border-color;
+$modal-footer-border-color: $modal-content-border-color;
+
 @import "node_modules/bootstrap/scss/bootstrap.scss";
 
 body {
@@ -102,7 +126,8 @@ body {
     right: 1rem;
 }
 
-.navbar .form-control {
+.navbar .form-control,
+.navbar button {
     padding: .75rem 1rem;
     border-width: 0;
     border-radius: 0;
@@ -118,6 +143,10 @@ body {
 .form-control-dark:focus {
     border-color: transparent;
     box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+}
+
+.navbar .search-form {
+    display: contents;
 }
 
 /*

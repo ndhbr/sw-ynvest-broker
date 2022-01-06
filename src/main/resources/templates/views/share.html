@@ -9,20 +9,24 @@
             <div class="col">
                 <small class="text-muted">Aktueller Kurswert</small>
                 <h2 class="portfolio-value">
-                    XXX.XX €
+                    <label th:text="${stockOrder.getUnitPrice()}"></label> €
                     <span class="stock-positive subbed">+X.X%</span>
                 </h2>
                 <p class="text-muted">
-                    ISIN: <label th:text="${share.getIsin()}"></label><br />
-                    Besitz: <label th:text="${share.getQuantity()}"></label> Anteile<br />
+                    ISIN: <label th:text="${share.getIsin()}"></label><br/>
+                    Besitz: <label th:text="${share.getQuantity()}"></label> Anteile<br/>
                 </p>
 
             </div>
             <div class="col">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <button type="button" class="btn btn-danger btn-lg"
-                            th:disabled="${share.getQuantity() == 0}">Verkaufen</button>
-                    <button type="button" class="btn btn-primary btn-lg">Kaufen</button>
+                            th:disabled="${share.getQuantity() == 0}"
+                            data-bs-toggle="modal" data-bs-target="#sellModal">Verkaufen
+                    </button>
+                    <button type="button" class="btn btn-primary btn-lg"
+                            data-bs-toggle="modal" data-bs-target="#buyModal">Kaufen
+                    </button>
                 </div>
             </div>
         </div>
@@ -44,6 +48,71 @@
                 </div>
                 <canvas class="my-4 w-100" id="stock-chart" width="900" height="380"></canvas>
             </div>
+        </div>
+    </div>
+
+    <!-- Sell Modal -->
+    <div class="modal fade" id="sellModal" tabindex="-1" aria-labelledby="sellModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" th:action="@{/orders}" th:object="${stockOrder}">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="sellModalLabel">Aktie(n) verkaufen</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input th:type="hidden" th:field="*{isin}" th:value="${stockOrder.getIsin()}" />
+                        <input th:type="hidden" th:field="*{unitPrice}" th:value="${stockOrder.getUnitPrice()}" />
+                        <input th:type="hidden" th:field="*{type}" th:value="${T(de.ndhbr.entity.OrderType).Sell}">
+
+                        <div class="form-input-group">
+                            <label for="Quantity">Wie viele Anteile möchtest du verkaufen?</label>
+                            <input th:field="*{quantity}" type="number" class="form-control form-control-dark"
+                                   id="Quantity" th:max="${share.getQuantity()}" min="1"
+                                   placeholder="Anzahl">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                        <button type="button" class="btn btn-primary">Auftrag erstellen</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Buy Modal -->
+    <div class="modal fade" id="buyModal" tabindex="-1" aria-labelledby="buyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" th:action="@{/orders}" th:object="${stockOrder}">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="buyModalLabel">Aktie(n) kaufen</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Verfügbares Guthaben: <label th:text="${virtualBalance}"></label> €
+
+                        <input th:type="hidden" th:field="*{isin}" th:value="${stockOrder.getIsin()}"/>
+                        <input th:type="hidden" th:field="*{unitPrice}" th:value="${stockOrder.getUnitPrice()}"/>
+
+                        <div class="form-input-group">
+                            <label for="Quantity">Wie viele Anteile möchtest du kaufen?</label>
+                            <input th:field="*{quantity}" type="number" class="form-control form-control-dark"
+                                   id="Quantity" th:max="${virtualBalance / stockOrder.getUnitPrice()}" min="1"
+                                   placeholder="Anzahl">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Abbrechen
+                        </button>
+                        <button type="button" class="btn btn-primary" th:type="submit">
+                            Auftrag erstellen
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

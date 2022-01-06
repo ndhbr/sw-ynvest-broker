@@ -13,6 +13,25 @@ public class BankAccountService implements BankAccountServiceIF {
     BankAccountRepo bankAccountRepo;
 
     @Override
+    public BankAccount getBankAccountByIban(String iban) {
+        return bankAccountRepo.getById(iban);
+    }
+
+    @Override
+    public BankAccount handleNewBuyOrder(BankAccount bankAccount, double amount) {
+        bankAccount.decreaseVirtualBalance(amount);
+        bankAccount.decreaseVirtualBalance(0.99);
+        return saveBankAccount(bankAccount);
+    }
+
+    @Override
+    public BankAccount handleNewSellOrder(BankAccount bankAccount, double amount) {
+        bankAccount.increaseVirtualBalance(amount);
+        bankAccount.decreaseVirtualBalance(0.99);
+        return saveBankAccount(bankAccount);
+    }
+
+    @Override
     public BankAccount saveBankAccount(BankAccount bankAccount) {
         return bankAccountRepo.save(bankAccount);
     }
