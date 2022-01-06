@@ -63,7 +63,7 @@
                     <div class="modal-body">
                         <input th:type="hidden" th:field="*{isin}" th:value="${stockOrder.getIsin()}" />
                         <input th:type="hidden" th:field="*{unitPrice}" th:value="${stockOrder.getUnitPrice()}" />
-                        <input th:type="hidden" th:field="*{type}" th:value="${T(de.ndhbr.entity.OrderType).Sell}">
+                        <input th:type="hidden" th:field="*{type}" th:value="${T(de.ndhbr.ynvest.entity.OrderType).Sell}">
 
                         <div class="form-input-group">
                             <label for="Quantity">Wie viele Anteile möchtest du verkaufen?</label>
