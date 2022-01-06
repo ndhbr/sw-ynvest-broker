@@ -1,5 +1,5 @@
 /* Bootstrap */
-$primary: #9c27b0;
+$primary: #125c00;
 @import "node_modules/bootstrap/scss/bootstrap.scss";
 
 body {
@@ -10,6 +10,13 @@ body {
     width: 16px;
     height: 16px;
     vertical-align: text-bottom;
+}
+
+.small-dialog {
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /*
@@ -78,12 +85,16 @@ body {
  */
 
 .navbar-brand {
-    padding-top: .75rem;
-    padding-bottom: .75rem;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
     font-size: 1rem;
     font-weight: bold;
     background-color: rgba(0, 0, 0, .25);
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+}
+
+.navbar-brand img {
+    max-height: 32px;
 }
 
 .navbar .navbar-toggler {

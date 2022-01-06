@@ -1,10 +1,10 @@
 package de.ndhbr.service.impl;
 
-import de.ndhbr.entity.CustomerType;
-import de.ndhbr.entity.StockOrder;
-import de.ndhbr.entity.Customer;
+import de.ndhbr.entity.*;
 import de.ndhbr.repository.CustomerRepo;
+import de.ndhbr.service.BankAccountServiceIF;
 import de.ndhbr.service.CustomerServiceIF;
+import de.ndhbr.service.PortfolioServiceIF;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,12 @@ public class CustomerService implements CustomerServiceIF {
 
     @Autowired
     private CustomerRepo customerRepo;
+
+    @Autowired
+    private PortfolioServiceIF portfolioService;
+
+    @Autowired
+    private BankAccountServiceIF bankAccountService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -35,11 +42,27 @@ public class CustomerService implements CustomerServiceIF {
     }
 
     @Override
+    @Transactional
     public Customer registerCustomer(Customer customer) throws ServiceException {
         Optional<Customer> foundCustomer = customerRepo.findById(customer.getID());
 
         if (foundCustomer.isEmpty()) {
+            // Create portfolio
+            Portfolio portfolio = portfolioService.savePortfolio(new Portfolio());
+
+            // Create bank account
+            BankAccount bankAccount = new BankAccount();
+            // TODO: Replace with account creation in Amann Bank
+            bankAccount.setRandomIbanTmp();
+            bankAccount.setBalance(10000);
+            bankAccount.setVirtualBalance(10000);
+            bankAccountService.saveBankAccount(bankAccount);
+
+            customer.setPortfolio(portfolio);
+            customer.setBankAccount(bankAccount);
             customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
+            customer.setRegisteredOn(new Date());
+
             return customerRepo.save(customer);
         }
 

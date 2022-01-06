@@ -13,9 +13,7 @@ public class PortfolioService implements PortfolioServiceIF {
     PortfolioRepo portfolioRepo;
 
     @Override
-    public Portfolio createPortfolio(Portfolio portfolio) {
+    public Portfolio savePortfolio(Portfolio portfolio) {
         return portfolioRepo.save(portfolio);
     }
-
-
 }

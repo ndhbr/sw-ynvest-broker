@@ -5,6 +5,7 @@ import de.ndhbr.entity.util.SingleIdEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Random;
 
 @Entity
 public class BankAccount extends SingleIdEntity<String> {
@@ -14,8 +15,8 @@ public class BankAccount extends SingleIdEntity<String> {
     private String username;
     private String password;
     private String eventUrl;
-    private double balance;
-    private double virtualBalance;
+    private double balance = 0;
+    private double virtualBalance = 0;
 
     public String getIban() {
         return iban;
@@ -25,44 +26,65 @@ public class BankAccount extends SingleIdEntity<String> {
         this.iban = iban;
     }
 
+    public void setRandomIbanTmp() {
+        // TODO: REMOVE, this is only before connecting to Bank Amann
+        Random rand = new Random();
+        StringBuilder card = new StringBuilder("DE");
+        for (int i = 0; i < 14; i++)
+        {
+            int n = rand.nextInt(10);
+            card.append(Integer.toString(n));
+        }
+
+        this.setIban(card.toString());
+    }
+
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String nutzername) {
-        this.username = nutzername;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String passwort) {
-        this.password = passwort;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEventUrl() {
         return eventUrl;
     }
 
-    public void setEventUrl(String ereignisUrl) {
-        this.eventUrl = ereignisUrl;
+    public void setEventUrl(String eventUrl) {
+        this.eventUrl = eventUrl;
     }
 
     public double getBalance() {
         return balance;
     }
 
-    public void setBalance(double kontostand) {
-        this.balance = kontostand;
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 
     public double getVirtualBalance() {
         return virtualBalance;
     }
 
-    public void setVirtualBalance(double virtuellerKontostand) {
-        this.virtualBalance = virtuellerKontostand;
+    public void setVirtualBalance(double virtualBalance) {
+        this.virtualBalance = virtualBalance;
+    }
+
+    public void decreaseVirtualBalance(double amount) {
+        if (this.virtualBalance < amount) {
+            this.virtualBalance = 0;
+        } else {
+            this.virtualBalance -= amount;
+        }
     }
 
     @Override

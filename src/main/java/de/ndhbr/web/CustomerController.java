@@ -50,10 +50,10 @@ public class CustomerController {
                                  Locale locale, ModelMap model) {
         try {
             customerService.registerCustomer(customer);
-            //request.login(customer.getEmail(), customer.getPassword()); // TODO! Funktioniert nicht
 
-            model.addAttribute("success", "Erfolgreich registriert!");
-            model.addAttribute("content", "start");
+            model.addAttribute("success", "Erfolgreich registriert! " +
+                    "Du kannst dich nun einloggen.");
+            model.addAttribute("content", "login");
         } catch (ServiceException e) {
             // Via HTML auf model zugreifen, um responsive zu gestalten
             model.addAttribute("error", e.getMessage());
@@ -82,15 +82,17 @@ public class CustomerController {
 
             customer.setAddress(address);
             customerService.verifyCustomer(customer);
+
+            model.addAttribute("customer", customer);
         } catch (Exception e) {
             // TODO: ERROR display
             // Via HTML auf model zugreifen, um responsive zu gestalten
-            model.addAttribute("error-msg", e.getMessage());
+            model.addAttribute("error", e.getMessage());
             model.addAttribute("content", "register");
         }
 
         model.addAttribute("success", "Du hast dich erfolgreich verifiziert!");
-        model.addAttribute("content", "portfolio");
+        model.addAttribute("content", "start");
 
         return "index";
     }

@@ -1,5 +1,6 @@
 package de.ndhbr.configuration;
 
+import de.ndhbr.entity.CustomerType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -11,17 +12,28 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import java.util.stream.Stream;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConf extends WebSecurityConfigurerAdapter {
+
+    public static final String[] STATIC_PATHS = {
+            "/style/**", "/js/**", "/img/**", "/fonts/**", "/api/**"
+    };
+
     private static final String[] ALLOW_ACCESS_WITHOUT_AUTHENTICATION = {
-            "/style/**", "/js/**", "/img/**", "/fonts/**", "/", "/login", "/error", "/register",
+            "/", "/login", "/error", "/register", "/faq", "/support",
             "/about"
     };
 
+    private static final String[] ALLOW_NON_VERIFIED_ACCESS = {
+            "/verify/**"
+    };
+
     private static final String[] ALLOW_VERIFIED_ACCESS = {
-            "/orders", "/portfolio", "/performance"
+            "/orders/**", "/portfolio/**", "/performance/**"
     };
 
     @Autowired
@@ -38,8 +50,17 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 // No login required
-                .antMatchers(ALLOW_ACCESS_WITHOUT_AUTHENTICATION)
+                .antMatchers(
+                        Stream.of(ALLOW_ACCESS_WITHOUT_AUTHENTICATION, STATIC_PATHS)
+                                .flatMap(Stream::of)
+                                .toArray(String[]::new)
+                )
                 .permitAll()
+                .and()
+                // Not verified login
+                .authorizeRequests()
+                .antMatchers(ALLOW_NON_VERIFIED_ACCESS)
+                .hasRole("NOT_VERIFIED")
                 .and()
                 // Verified login required
                 .authorizeRequests()

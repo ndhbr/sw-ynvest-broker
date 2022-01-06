@@ -32,3 +32,6 @@ mvnw.cmd
 ### Node ###
 node_modules/**
 node/**
+
+### PhotoLine ###
+*.plb

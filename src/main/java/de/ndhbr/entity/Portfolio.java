@@ -1,16 +1,20 @@
 package de.ndhbr.entity;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 public class Portfolio {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long portfolioId;
+
     @ElementCollection
+    //@CollectionTable(name = "portfolio_shares", joinColumns = @JoinColumn(name = "portfolio_id"))
+    //@Column(name = "shares")
     private List<Share> shares;
 
     public long getPortfolioId() {
@@ -22,7 +26,42 @@ public class Portfolio {
     }
 
     public List<Share> getShares() {
-        return shares;
+        return this.shares;
+    }
+
+    /**
+     * Returns instance of share by isin
+     *
+     * @param isin Stock identifier
+     * @return share
+     */
+    public Optional<Share> getShareByIsin(String isin) {
+        return this.shares.stream().filter(
+                s -> s.getIsin().equals(isin)
+        ).findFirst();
+    }
+
+    /**
+     * Returns amount of shares for this stock
+     *
+     * @param isin Stock identifier
+     * @return quantity
+     */
+    public int getShareQuantity(String isin) {
+        Optional<Share> share;
+        int result = 0;
+
+        if (this.shares == null) {
+            return result;
+        }
+
+        share = getShareByIsin(isin);
+
+        if (share.isPresent()) {
+            result = share.get().getQuantity();
+        }
+
+        return result;
     }
 
     public void setShares(List<Share> shares) {
@@ -34,5 +73,21 @@ public class Portfolio {
             this.shares = new ArrayList<Share>();
         }
         this.shares.add(share);
+    }
+
+    public void updateShare(Share share) {
+        if (this.shares == null) {
+            this.insertShare(share);
+        }
+
+        for (Share s : this.shares) {
+            if (s.getIsin().equals(share.getIsin())) {
+                int index = this.shares.indexOf(s);
+                if (index > -1) {
+                    this.shares.set(index, share);
+                }
+                break;
+            }
+        }
     }
 }

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<div th:fragment="share" class="p-3">
+    <h1 class="h2">{Share_Name}</h1>
+
+    <div class="container g-0">
+        <div class="row">
+            <div class="col">
+                <small class="text-muted">Aktueller Kurswert</small>
+                <h2 class="portfolio-value">
+                    XXX.XX €
+                    <span class="stock-positive subbed">+X.X%</span>
+                </h2>
+                <p class="text-muted">
+                    ISIN: <label th:text="${share.getIsin()}"></label><br />
+                    Besitz: <label th:text="${share.getQuantity()}"></label> Anteile<br />
+                </p>
+
+            </div>
+            <div class="col">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="button" class="btn btn-danger btn-lg"
+                            th:disabled="${share.getQuantity() == 0}">Verkaufen</button>
+                    <button type="button" class="btn btn-primary btn-lg">Kaufen</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h3>Performance</h3>
+                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary" for="btnradio1">Tag</label>
+
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="btnradio2">Woche</label>
+
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="btnradio3">Monat</label>
+
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="btnradio3">Jahr</label>
+                </div>
+                <canvas class="my-4 w-100" id="stock-chart" width="900" height="380"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

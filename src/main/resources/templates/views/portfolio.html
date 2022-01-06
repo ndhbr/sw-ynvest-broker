@@ -1,13 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
 <div th:fragment="portfolio" class="p-3">
     <h1 class="h2">Dein Depot</h1>
 
     <div id="portfolio-actions">
         <small class="text-muted">Portfoliowert</small>
         <h2 class="portfolio-value">
-            312.042 €
-            <span class="stock-positive subbed">+0.3%</span>
+            XXX.XXX €
+            <span class="stock-positive subbed">+X.X%</span>
         </h2>
-        <p class="text-muted">Verfügbares Guthaben: 12.340 €</p>
+        <p class="text-muted">
+            Verfügbares Guthaben: <label th:text="${bankAccount?.getVirtualBalance()}"></label> €
+        </p>
     </div>
 
     <div id="portfolio-values">
@@ -21,15 +26,19 @@
             <tbody>
             <tr th:each="share : ${shares}">
                 <td>
-                    <label th:text="${share.getIsin()}"></label><br />
-                    <b>x<label th:text="${share.getQuantity()}"></label></b>
+                    <a th:href="@{/portfolio/share(isin=${share.getIsin()})}">
+                        <label th:text="${share.getIsin()}"></label><br/>
+                        <b>x<label th:text="${share.getQuantity()}"></label></b>
+                    </a>
                 </td>
                 <td>
-                    103,15<br />
-                    <span class="stock-negative">-3.4%</span>
+                    XXX,XX<br/>
+                    <span class="stock-negative">-X.X%</span>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
 </div>
+</body>
+</html>

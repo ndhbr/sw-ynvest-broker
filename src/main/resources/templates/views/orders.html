@@ -4,15 +4,27 @@
 <div th:fragment="orders" class="p-3">
     <h1 class="h2">Aufträge</h1>
 
-    <form method="post" th:action="@{/orders}" th:object="${stockOrder}">
-        <div class="form-input-group">
-            <input type="text" th:field="*{isin}" class="form-control form-control-dark" id="ISIN"
-                   placeholder="ISIN">
-            <input th:field="*{quantity}" type="number" class="form-control form-control-dark" id="Quantity"
-                   placeholder="Quantity">
+    <p>
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNewOrder"
+                aria-expanded="false" aria-controls="collapseExample">
+            Neuer Auftrag
+        </button>
+    </p>
+    <div class="collapse" id="collapseNewOrder">
+        <div class="card bg-dark card-body">
+            <form method="post" th:action="@{/orders}" th:object="${stockOrder}">
+                <div class="form-input-group">
+                    <input type="text" th:field="*{isin}" class="form-control form-control-dark" id="ISIN"
+                           placeholder="ISIN">
+                    <input type="number" th:field="*{unitPrice}" class="form-control form-control-dark" id="UnitPrice"
+                           placeholder="Unit Price" step="0.01">
+                    <input th:field="*{quantity}" type="number" class="form-control form-control-dark" id="Quantity"
+                           placeholder="Quantity">
+                </div>
+                <button class="w-100 btn btn-lg btn-primary" type="submit">Auftrag erstellen</button>
+            </form>
         </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Auftrag erstellen</button>
-    </form>
+    </div>
 
     <table class="table table-striped table-hover table-dark mt-3">
         <thead>
@@ -28,11 +40,14 @@
 
         <tbody>
         <tr th:each="order : ${orders}">
-            <th scope="row"><label th:text="${order.getIsin()}"></label></th>
+            <th scope="row">
+                <label th:text="${order.getIsin()}"></label><br/>
+                <label th:text="${order.getOrderId()}" class="text-muted"></label>
+            </th>
             <td><label th:text="${order.getType()}"></label></td>
             <td>x<label th:text="${order.getQuantity()}"></label></td>
             <td><label th:text="${order.getUnitPrice()}"></label> €</td>
-            <td><label th:text="${order.getStatus()}"></label></td>
+            <td><label th:text="${order.getStatus().name()}"></label></td>
             <td><label th:text="${order.getUnitPrice() * order.getQuantity()}"></label> €</td>
         </tr>
         </tbody>

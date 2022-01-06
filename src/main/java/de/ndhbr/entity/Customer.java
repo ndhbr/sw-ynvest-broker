@@ -26,7 +26,7 @@ public class Customer extends SingleIdEntity<String> implements UserDetails {
     private BankAccount bankAccount;
     @OneToOne
     private Portfolio portfolio;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "customer")
     private List<StockOrder> stockOrders;
 
     public String getEmail() {
@@ -114,7 +114,6 @@ public class Customer extends SingleIdEntity<String> implements UserDetails {
         return List.of(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-                System.out.println("GRANTED_AUTHORITY: " + Customer.this.customerType.name());
                 return Customer.this.customerType.name();
             }
         });

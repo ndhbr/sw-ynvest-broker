@@ -1,23 +1,36 @@
 package de.ndhbr.web;
 
+import de.ndhbr.entity.Customer;
+import de.ndhbr.service.CustomerServiceIF;
+import org.hibernate.service.spi.ServiceException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
 import java.util.Locale;
 
 @Controller
 public class StartController {
 
-    @RequestMapping("/")
-    public String root(Locale locale, ModelMap model) {
-        model.addAttribute("content", "start");
-        return "index";
-    }
+    @Autowired
+    CustomerServiceIF customerService;
 
-    @RequestMapping("/error")
-    public String error(Locale locale, ModelMap model) {
-        model.addAttribute("content", "error");
+    @RequestMapping("/")
+    public String root(Locale locale, ModelMap model, Principal user) {
+        if (user != null) {
+            String email = user.getName();
+
+            try {
+                Customer customer = customerService.getCustomerByEmail(email);
+                model.addAttribute("customer", customer);
+            } catch (ServiceException e) {
+                model.addAttribute("error", e.getMessage());
+            }
+        }
+
+        model.addAttribute("content", "start");
         return "index";
     }
 

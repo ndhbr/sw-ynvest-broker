@@ -35,6 +35,7 @@ public class ynvestApplication implements ApplicationRunner {
         try {
             kundeService.getCustomerByEmail("test@ndhbr.de");
         } catch (Exception e) {
+            /*
             Address address = new Address();
             Portfolio portfolio = new Portfolio();
             Share share1 = new Share();

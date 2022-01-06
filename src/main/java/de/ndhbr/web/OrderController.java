@@ -1,10 +1,10 @@
 package de.ndhbr.web;
 
-import de.ndhbr.entity.Customer;
-import de.ndhbr.entity.OrderStatus;
-import de.ndhbr.entity.OrderType;
-import de.ndhbr.entity.StockOrder;
+import de.ndhbr.entity.*;
+import de.ndhbr.service.BankAccountServiceIF;
+import de.ndhbr.service.CustomerServiceIF;
 import de.ndhbr.service.OrderServiceIF;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,18 +15,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.transaction.Transactional;
 import java.security.Principal;
-import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
-
-import static java.util.UUID.randomUUID;
 
 @Controller
-//@Scope(value = "session")
 public class OrderController {
 
     @Autowired
     OrderServiceIF orderService;
+
+    @Autowired
+    CustomerServiceIF customerService;
+
+    @Autowired
+    BankAccountServiceIF bankAccountService;
 
     @RequestMapping("/orders")
     public String orders(Locale locale, ModelMap model, Principal user) {
@@ -42,29 +43,41 @@ public class OrderController {
     @Transactional
     public String orderAction(@ModelAttribute("stockOrder") StockOrder stockOrder,
                               Locale locale, ModelMap model, Principal user) {
-        Customer customer = (Customer) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+        String userId = SecurityContextHolder.getContext()
+                .getAuthentication().getName();
+        Customer customer = null;
 
         try {
-            // TODO: TMP -> Random Stock Price
-            Random r = new Random();
-            double randomValue = 1.0 + (500.0 - 1.0) * r.nextDouble();
+            customer = customerService.getCustomerByEmail(userId);
+            Portfolio portfolio = customer.getPortfolio();
+            BankAccount bankAccount = customer.getBankAccount();
 
-            stockOrder.setOrderId(randomUUID().getMostSignificantBits() & Long.MAX_VALUE);
-            stockOrder.setType(OrderType.Buy);
-            stockOrder.setUnitPrice(randomValue);
-            stockOrder.setStatus(OrderStatus.Open);
-            stockOrder.setPlacedOn(new Date());
+            // TODO: negative shares should not be possible
+            if ((stockOrder.getQuantity() < 0 || (stockOrder.getType() != null && stockOrder.getType() == OrderType.Sell)) &&
+                    portfolio.getShareQuantity(stockOrder.getIsin()) < Math.abs(stockOrder.getQuantity())) {
+                throw new ServiceException("Du besitzt leider nicht genügend Anteile dieser Firma.");
+            }
 
+            if (bankAccount.getVirtualBalance() < (stockOrder.getUnitPrice() * stockOrder.getQuantity())) {
+                throw new ServiceException("Du hast leider nicht genug Geld auf deinem Guthaben.");
+            }
+
+            // Create order
             StockOrder addedOrder = orderService.createOrder(stockOrder);
-            customer.addOrder(addedOrder);
-        } catch (Exception e) {
-            // TODO!
+            customerService.addOrder(addedOrder);
+
+            // Remove virtual money
+            bankAccount.decreaseVirtualBalance(addedOrder.getQuantity() * addedOrder.getUnitPrice());
+            bankAccount.decreaseVirtualBalance(0.99); // TODO: export constant
+            // TODO: decrease real balance
+            bankAccountService.saveBankAccount(bankAccount);
+        } catch (ServiceException e) {
+            model.addAttribute("error", e.getMessage());
         }
 
-        System.out.println(stockOrder.getIsin());
-
-        model.addAttribute("orders", customer.getOrders());
+        if (customer != null) {
+            model.addAttribute("orders", customer.getOrders());
+        }
         model.addAttribute("content", "orders");
         return "index";
     }

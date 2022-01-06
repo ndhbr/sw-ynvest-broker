@@ -1,5 +1,7 @@
 package de.ndhbr.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -8,6 +10,7 @@ import static de.ndhbr.util.MathUtils.round;
 @Entity
 public class StockOrder {
     @Id
+    @JsonProperty("orderId")
     private long orderId;
     @Enumerated(EnumType.STRING)
     private OrderType type;
@@ -17,14 +20,16 @@ public class StockOrder {
     private int quantity;
     private double unitPrice;
     private String eventUrl;
+    @ManyToOne
+    private Customer customer;
     private Date placedOn;
 
     public long getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(long auftragsNr) {
-        this.orderId = auftragsNr;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
 
     public OrderType getType() {
@@ -55,8 +60,8 @@ public class StockOrder {
         return quantity;
     }
 
-    public void setQuantity(int menge) {
-        this.quantity = menge;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public double getUnitPrice() {
@@ -73,6 +78,14 @@ public class StockOrder {
 
     public void setEventUrl(String eventUrl) {
         this.eventUrl = eventUrl;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public Date getPlacedOn() {

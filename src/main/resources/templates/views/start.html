@@ -1,7 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
 <div th:fragment="start" class="p-3">
-    <h1 class="h2">Der einzige Broker, den du brauchst</h1>
-    <p class="mb-3">
-        Mit ynvest brauchst du dich nie wieder um teure Ordergebühren kümmern. Mit nur festen 0,99 € pro Trade
-        gehört ynvest zu den günstigsten Aktien-Brokern der Welt!
-    </p>
+    <div class="small-dialog" sec:authorize="isAuthenticated()">
+        <h1 class="h2">Willkommen <label th:text="${customer?.getName()}"></label>,</h1>
+        <p>
+            Heute ist ein guter Tag Geld zu investieren.
+            Schau doch in deinem Depot vorbei!
+        </p>
+        <a th:href="@{/portfolio}" type="button" class="btn btn-primary btn-lg btn-block">Zum Depot</a>
+    </div>
+
+    <div class="small-dialog" sec:authorize="!isAuthenticated()">
+        <h1 class="h2">Der einzige Broker, den du brauchst</h1>
+        <p>
+            Mit ynvest brauchst du dich nie wieder um teure Ordergebühren kümmern. Mit nur festen 0,99 € pro Trade
+            gehört ynvest zu den günstigsten Aktien-Brokern der Welt!
+        </p>
+        <p class="mb-3">
+            Erstell dir jetzt ein gratis Depot.
+        </p>
+        <a th:href="@{/register}" type="button" class="btn btn-primary btn-lg btn-block">Registrieren</a>
+    </div>
 </div>
+</body>
+</html>

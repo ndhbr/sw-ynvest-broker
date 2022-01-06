@@ -6,7 +6,7 @@
     feather.replace({ 'aria-hidden': 'true' })
 
     // Graphs
-    var ctx = document.getElementById('myChart')
+    var ctx = document.getElementById('stock-chart')
     // eslint-disable-next-line no-unused-vars
     var myChart = new Chart(ctx, {
         type: 'line',
@@ -32,9 +32,9 @@
                 ],
                 lineTension: 0,
                 backgroundColor: 'transparent',
-                borderColor: '#007bff',
+                borderColor: '#125c00',
                 borderWidth: 4,
-                pointBackgroundColor: '#007bff'
+                pointBackgroundColor: '#125c00'
             }]
         },
         options: {
