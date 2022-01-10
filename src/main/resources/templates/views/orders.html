@@ -35,6 +35,7 @@
             <th scope="col">Stückpreis</th>
             <th scope="col">Status</th>
             <th scope="col">Gesamtpreis</th>
+            <th scope="col">Platziert am</th>
         </tr>
         </thead>
 
@@ -49,6 +50,7 @@
             <td><label th:text="${order.getUnitPrice()}"></label> €</td>
             <td><label th:text="${order.getStatus().name()}"></label></td>
             <td><label th:text="${order.getUnitPrice() * order.getQuantity()}"></label> €</td>
+            <td><label th:text="${order.getPlacedOnHumanReadable()}"></label></td>
         </tr>
         </tbody>
     </table>

@@ -3,6 +3,7 @@ package de.ndhbr.ynvest.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static de.ndhbr.ynvest.util.MathUtils.round;
@@ -90,6 +91,11 @@ public class StockOrder {
 
     public Date getPlacedOn() {
         return placedOn;
+    }
+
+    public String getPlacedOnHumanReadable() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        return sdf.format(placedOn) + " Uhr";
     }
 
     public void setPlacedOn(Date placedOn) {

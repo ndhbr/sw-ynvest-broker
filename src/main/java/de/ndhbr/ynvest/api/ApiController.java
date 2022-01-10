@@ -1,8 +1,10 @@
 package de.ndhbr.ynvest.api;
 
 import de.ndhbr.ynvest.entity.BankAccount;
+import de.ndhbr.ynvest.entity.Customer;
 import de.ndhbr.ynvest.entity.StockOrder;
 import de.ndhbr.ynvest.service.BankAccountServiceIF;
+import de.ndhbr.ynvest.service.CustomerServiceIF;
 import de.ndhbr.ynvest.service.OrderServiceIF;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +24,11 @@ public class ApiController {
     BankAccountServiceIF bankAccountService;
 
     @PutMapping("/order")
-    public String completeOrder(@RequestBody Long orderId) {
+    public String completeOrder(@RequestBody StockOrder order) {
         ApiResponse result;
 
         try {
-            StockOrder order = orderService.completeOrderById(orderId);
+            orderService.completeOrderById(order.getOrderId());
             result = new ApiResponse(ApiResult.Success,
                     "Der Auftrag wurde erfolgreich abgeschlossen.");
         } catch (ServiceException e) {
@@ -44,13 +46,8 @@ public class ApiController {
         try {
             BankAccount foundBankAccount =
                     bankAccountService.getBankAccountByIban(bankAccount.getIban());
-
-            // TODO: update virtual balance according to current state
-            double differenceOld = foundBankAccount.getBalance() -
-                    bankAccount.getBalance();
-            double differenceVirtual = (foundBankAccount.getBalance() -
-                    foundBankAccount.getVirtualBalance()) - differenceOld;
-            double newVirtualBalance = bankAccount.getBalance() - differenceVirtual;
+            double newVirtualBalance = bankAccount.getBalance() -
+                    orderService.getSumOfOpenOrders(foundBankAccount.getCustomer());
 
             foundBankAccount.setBalance(bankAccount.getBalance());
             foundBankAccount.setVirtualBalance(newVirtualBalance);

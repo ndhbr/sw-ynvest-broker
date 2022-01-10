@@ -5,7 +5,6 @@ import de.ndhbr.ynvest.repository.OrderRepo;
 import de.ndhbr.ynvest.service.OrderServiceIF;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -77,29 +76,28 @@ public class OrderService implements OrderServiceIF {
     }
 
     @Override
-    public StockOrder createOrder(StockOrder stockOrder) {
-        Customer customer = (Customer) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-
+    public StockOrder createOrder(StockOrder stockOrder, Customer customer) {
         stockOrder.setOrderId(randomUUID().getMostSignificantBits() & Long.MAX_VALUE);
         stockOrder.setCustomer(customer);
         stockOrder.setPlacedOn(new Date());
-        if (stockOrder.getQuantity() < 0) {
-            stockOrder.setType(OrderType.Sell);
-            stockOrder.setQuantity(Math.abs(stockOrder.getQuantity()));
-        } else {
-            stockOrder.setType(OrderType.Buy);
+
+        if (stockOrder.getType() == null) {
+            if (stockOrder.getQuantity() < 0) {
+                stockOrder.setType(OrderType.Sell);
+                stockOrder.setQuantity(Math.abs(stockOrder.getQuantity()));
+            } else {
+                stockOrder.setType(OrderType.Buy);
+            }
         }
+
         stockOrder.setStatus(OrderStatus.Open);
 
-        // TODO: TMP -> Random Stock Price
-        if (stockOrder.getUnitPrice() == 0) {
-            Random r = new Random();
-            double randomValue = 1.0 + (500.0 - 1.0) * r.nextDouble();
-            stockOrder.setUnitPrice(randomValue);
-        }
-
         return orderRepo.save(stockOrder);
+    }
+
+    @Override
+    public double getSumOfOpenOrders(Customer customer) {
+        return orderRepo.getSumOfAllOpenOrdersByCustomer(customer);
     }
 
     @Override

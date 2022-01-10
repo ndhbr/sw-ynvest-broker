@@ -5,6 +5,7 @@ import de.ndhbr.ynvest.entity.util.SingleIdEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import java.util.Random;
 
 @Entity
@@ -17,6 +18,8 @@ public class BankAccount extends SingleIdEntity<String> {
     private String eventUrl;
     private double balance = 0;
     private double virtualBalance = 0;
+    @OneToOne(mappedBy = "bankAccount")
+    private Customer customer;
 
     public String getIban() {
         return iban;
@@ -89,6 +92,14 @@ public class BankAccount extends SingleIdEntity<String> {
 
     public void increaseVirtualBalance(double amount) {
         this.virtualBalance += amount;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     @Override

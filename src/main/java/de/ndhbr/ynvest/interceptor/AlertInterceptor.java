@@ -20,7 +20,9 @@ public class AlertInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response,
                            Object handler, ModelAndView modelAndView) {
-        assert modelAndView != null;
+        if (modelAndView == null) {
+            return;
+        }
 
         if (request.isUserInRole("ROLE_NOT_VERIFIED")) {
             modelAndView.addObject("globalAlert", "Du bist noch nicht verifiziert! " +

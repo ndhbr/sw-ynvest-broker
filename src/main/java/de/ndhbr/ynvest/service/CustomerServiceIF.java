@@ -11,6 +11,6 @@ public interface CustomerServiceIF extends UserDetailsService {
     Customer registerCustomer(Customer customer);
     Customer updateCustomer(Customer customer);
     Customer verifyCustomer(Customer customer);
-    void addOrder(StockOrder stockOrder);
+    void addOrder(StockOrder stockOrderm, Customer customer);
     List<StockOrder> getOrders(Customer customer);
 }

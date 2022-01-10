@@ -7,7 +7,6 @@ import de.ndhbr.ynvest.service.CustomerServiceIF;
 import de.ndhbr.ynvest.service.PortfolioServiceIF;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -82,10 +81,7 @@ public class CustomerService implements CustomerServiceIF {
 
     @Override
     @Transactional
-    public void addOrder(StockOrder stockOrder) {
-        Customer customer = (Customer) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-
+    public void addOrder(StockOrder stockOrder, Customer customer) {
         if (customer != null) {
             customer.addOrder(stockOrder);
             customerRepo.save(customer);

@@ -31,8 +31,10 @@ public class OrderController {
 
     @RequestMapping("/orders")
     public String orders(Locale locale, ModelMap model, Principal user) {
-        Customer customer = (Customer) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+        String userId = SecurityContextHolder.getContext()
+                .getAuthentication().getName();
+        Customer customer = customerService.getCustomerByEmail(userId);
+
         model.addAttribute("orders", customer.getOrders());
         model.addAttribute("stockOrder", new StockOrder());
         model.addAttribute("content", "orders");
@@ -63,8 +65,8 @@ public class OrderController {
             }
 
             // Create order
-            StockOrder addedOrder = orderService.createOrder(stockOrder);
-            customerService.addOrder(addedOrder);
+            StockOrder addedOrder = orderService.createOrder(stockOrder, customer);
+            customerService.addOrder(addedOrder, customer);
 
             // Remove virtual money
             if (addedOrder.getType().equals(OrderType.Buy)) {

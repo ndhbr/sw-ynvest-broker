@@ -63,18 +63,25 @@
                     <div class="modal-body">
                         <input th:type="hidden" th:field="*{isin}" th:value="${stockOrder.getIsin()}" />
                         <input th:type="hidden" th:field="*{unitPrice}" th:value="${stockOrder.getUnitPrice()}" />
-                        <input th:type="hidden" th:field="*{type}" th:value="${T(de.ndhbr.ynvest.entity.OrderType).Sell}">
+                               <!-- th:value="${T(de.ndhbr.ynvest.entity.OrderType).Sell.name()}"> -->
 
                         <div class="form-input-group">
-                            <label for="Quantity">Wie viele Anteile möchtest du verkaufen?</label>
+                            <select class="form-control form-control-dark" id="Type" th:field="*{type}">
+                                <option th:each="type : ${T(de.ndhbr.ynvest.entity.OrderType).values()}"
+                                        th:value="${type}" th:text="${type}"></option>
+                            </select>
                             <input th:field="*{quantity}" type="number" class="form-control form-control-dark"
                                    id="Quantity" th:max="${share.getQuantity()}" min="1"
                                    placeholder="Anzahl">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-                        <button type="button" class="btn btn-primary">Auftrag erstellen</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Abbrechen
+                        </button>
+                        <button th:type="submit" class="btn btn-primary">
+                            Auftrag erstellen
+                        </button>
                     </div>
                 </div>
             </form>

@@ -27,6 +27,7 @@ public class Customer extends SingleIdEntity<String> implements UserDetails {
     @OneToOne
     private Portfolio portfolio;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "customer")
+    @OrderBy("placedOn DESC")
     private List<StockOrder> stockOrders;
 
     public String getEmail() {
