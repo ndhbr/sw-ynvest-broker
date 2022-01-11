@@ -12,8 +12,6 @@ public class Portfolio {
     private long portfolioId;
 
     @ElementCollection
-    //@CollectionTable(name = "portfolio_shares", joinColumns = @JoinColumn(name = "portfolio_id"))
-    //@Column(name = "shares")
     private List<Share> shares;
 
     public long getPortfolioId() {

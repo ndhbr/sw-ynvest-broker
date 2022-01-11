@@ -50,9 +50,9 @@ public class CustomerService implements CustomerServiceIF {
             Portfolio portfolio = portfolioService.savePortfolio(new Portfolio());
 
             // Create bank account
+            // TODO: SCHNITTSTELLE ZU SINA BANK!
             BankAccount bankAccount = new BankAccount();
-            // TODO: Replace with account creation in Amann Bank
-            bankAccount.setRandomIbanTmp();
+            bankAccount.setRandomIbanTmp(); // TODO: Replace with account creation in Amann Bank
             bankAccount.setBalance(10000);
             bankAccount.setVirtualBalance(10000);
             bankAccountService.saveBankAccount(bankAccount);
@@ -66,11 +66,6 @@ public class CustomerService implements CustomerServiceIF {
         }
 
         throw new ServiceException("Ein Benutzer mit dieser E-Mail Adresse existiert bereits!");
-    }
-
-    @Override
-    public Customer updateCustomer(Customer customer) {
-        return customerRepo.save(customer);
     }
 
     @Override

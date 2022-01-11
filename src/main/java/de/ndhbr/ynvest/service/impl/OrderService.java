@@ -27,11 +27,6 @@ public class OrderService implements OrderServiceIF {
     }
 
     @Override
-    public void updateOrder(StockOrder stockOrder) {
-        // TODO: Implement or remove
-    }
-
-    @Override
     @Transactional
     public StockOrder completeOrderById(Long orderId) throws ServiceException {
         Optional<StockOrder> foundOrder = findOrderById(orderId);
@@ -61,7 +56,8 @@ public class OrderService implements OrderServiceIF {
                 portfolio.insertShare(share);
             }
 
-            // TODO: Call Amann Bank transfer money
+            // TODO: SCHNITTSTELLE ZU SINA BANK
+            //  Call Amann Bank to transfer money
             // -> 0,99 ct to my bank account
             // -> Amount to stock exchange (yetra)
 
@@ -88,6 +84,12 @@ public class OrderService implements OrderServiceIF {
             } else {
                 stockOrder.setType(OrderType.Buy);
             }
+        }
+
+        // TODO: SCHNITTSTELLE STEFAN - Ask for current price
+        // AND SEND IT TO HIM
+        if (stockOrder.getUnitPrice() != 100.0) {
+            throw new ServiceException("Der Auftragspreis hat sich in der Zwischenzeit verändert. Versuche es erneut.");
         }
 
         stockOrder.setStatus(OrderStatus.Open);

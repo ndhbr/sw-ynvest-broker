@@ -1,5 +1,6 @@
 package de.ndhbr.ynvest.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -8,8 +9,9 @@ import java.security.SecureRandom;
 
 @Configuration
 public class SecurityUtils {
-    // TODO: Dont hardcode that pls
-    private static String salt = "ynvest";
+
+    @Value("#{environment.user_password_salt}")
+    private static String salt;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

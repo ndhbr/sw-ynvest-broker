@@ -55,7 +55,6 @@ public class CustomerController {
                     "Du kannst dich nun einloggen.");
             model.addAttribute("content", "login");
         } catch (ServiceException e) {
-            // Via HTML auf model zugreifen, um responsive zu gestalten
             model.addAttribute("error", e.getMessage());
             model.addAttribute("content", "register");
         }
@@ -77,16 +76,15 @@ public class CustomerController {
                                Locale locale, ModelMap model,
                                Principal user) {
         try {
-            Customer customer = (Customer) SecurityContextHolder.getContext()
-                    .getAuthentication().getPrincipal();
+            String userId = SecurityContextHolder.getContext()
+                    .getAuthentication().getName();
+            Customer customer = customerService.getCustomerByEmail(userId);
 
             customer.setAddress(address);
             customerService.verifyCustomer(customer);
 
             model.addAttribute("customer", customer);
-        } catch (Exception e) {
-            // TODO: ERROR display
-            // Via HTML auf model zugreifen, um responsive zu gestalten
+        } catch (ServiceException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("content", "register");
         }

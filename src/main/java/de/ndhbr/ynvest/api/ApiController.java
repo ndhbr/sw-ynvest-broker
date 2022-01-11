@@ -1,10 +1,8 @@
 package de.ndhbr.ynvest.api;
 
 import de.ndhbr.ynvest.entity.BankAccount;
-import de.ndhbr.ynvest.entity.Customer;
 import de.ndhbr.ynvest.entity.StockOrder;
 import de.ndhbr.ynvest.service.BankAccountServiceIF;
-import de.ndhbr.ynvest.service.CustomerServiceIF;
 import de.ndhbr.ynvest.service.OrderServiceIF;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;

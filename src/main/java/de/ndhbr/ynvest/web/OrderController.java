@@ -54,8 +54,7 @@ public class OrderController {
             Portfolio portfolio = customer.getPortfolio();
             BankAccount bankAccount = customer.getBankAccount();
 
-            // TODO: negative shares should not be possible
-            if ((stockOrder.getQuantity() < 0 || (stockOrder.getType() != null && stockOrder.getType() == OrderType.Sell)) &&
+            if ((stockOrder.getType() != null && stockOrder.getType() == OrderType.Sell) &&
                     portfolio.getShareQuantity(stockOrder.getIsin()) < Math.abs(stockOrder.getQuantity())) {
                 throw new ServiceException("Du besitzt leider nicht genügend Anteile dieser Firma.");
             }
@@ -83,6 +82,7 @@ public class OrderController {
         if (customer != null) {
             model.addAttribute("orders", customer.getOrders());
         }
+        model.addAttribute("success", "Der Auftrag wurde erfolgreich erstellt!");
         model.addAttribute("content", "orders");
         return "index";
     }

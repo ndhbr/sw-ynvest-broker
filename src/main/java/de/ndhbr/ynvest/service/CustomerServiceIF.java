@@ -9,8 +9,7 @@ import java.util.List;
 public interface CustomerServiceIF extends UserDetailsService {
     Customer getCustomerByEmail(String email);
     Customer registerCustomer(Customer customer);
-    Customer updateCustomer(Customer customer);
     Customer verifyCustomer(Customer customer);
-    void addOrder(StockOrder stockOrderm, Customer customer);
+    void addOrder(StockOrder stockOrder, Customer customer);
     List<StockOrder> getOrders(Customer customer);
 }
