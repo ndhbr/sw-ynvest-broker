@@ -37,13 +37,14 @@ public class ApiController {
         return result.toJson();
     }
 
-    @PutMapping("/bank-account")
-    public String updateBankAccount(@RequestBody BankAccount bankAccount) {
+    @PatchMapping("/bankAccounts/{iban}")
+    public String updateBankAccount(@PathVariable String iban,
+                                    @RequestBody BankAccount bankAccount) {
         ApiResponse result;
 
         try {
             BankAccount foundBankAccount =
-                    bankAccountService.getBankAccountByIban(bankAccount.getIban());
+                    bankAccountService.getBankAccountByIban(iban);
             double newVirtualBalance = bankAccount.getBalance() -
                     orderService.getSumOfOpenOrders(foundBankAccount.getCustomer());
 

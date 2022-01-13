@@ -11,7 +11,7 @@
             <span class="stock-positive subbed">+X.X%</span>
         </h2>
         <p class="text-muted">
-            Verfügbares Guthaben: <label th:text="${bankAccount?.getVirtualBalance()}"></label> €
+            Verfügbares Guthaben: <label th:text="${bankAccount?.getRoundedVirtualBalance()}"></label> €
         </p>
     </div>
 
@@ -26,7 +26,7 @@
             <tbody>
             <tr th:each="share : ${shares}">
                 <td>
-                    <a th:href="@{/portfolio/share(isin=${share.getIsin()})}">
+                    <a th:href="@{/portfolio/share/{isin}(isin= ${share.getIsin()})}">
                         <label th:text="${share.getIsin()}"></label><br/>
                         <b>x<label th:text="${share.getQuantity()}"></label></b>
                     </a>

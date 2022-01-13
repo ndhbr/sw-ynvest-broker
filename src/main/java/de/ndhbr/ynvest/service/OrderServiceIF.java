@@ -11,5 +11,6 @@ public interface OrderServiceIF {
     StockOrder completeOrderById(Long orderId) throws ServiceException;
     StockOrder createOrder(StockOrder stockOrder, Customer customer);
     double getSumOfOpenOrders(Customer customer);
+    double getQuantityOfAllOpenSellOrders(Customer customer);
     Iterable<StockOrder> getAllOrders();
 }

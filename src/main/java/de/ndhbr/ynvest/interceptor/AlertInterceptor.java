@@ -25,7 +25,7 @@ public class AlertInterceptor implements HandlerInterceptor {
         }
 
         if (request.isUserInRole("ROLE_NOT_VERIFIED")) {
-            modelAndView.addObject("globalAlert", "Du bist noch nicht verifiziert! " +
+            modelAndView.addObject("primary", "Du bist noch nicht verifiziert! " +
                     "Vervollständige deine Daten, um deinen ersten Wertpapierhandel tätigen zu können.");
         }
     }

@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 public class Customer extends SingleIdEntity<String> implements UserDetails {
     @Id
-    @Column(length=100)
+    @Column(length = 100)
     private String email;
     private String name;
     private String password;
@@ -22,9 +22,9 @@ public class Customer extends SingleIdEntity<String> implements UserDetails {
     private Date registeredOn;
     @Embedded
     private Address address;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private BankAccount bankAccount;
-    @OneToOne
+    @OneToOne(orphanRemoval = true)
     private Portfolio portfolio;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "customer")
     @OrderBy("placedOn DESC")

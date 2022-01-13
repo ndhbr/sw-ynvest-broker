@@ -87,4 +87,8 @@ public class Portfolio {
             }
         }
     }
+
+    public boolean removeShare(Share share) {
+        return this.shares.remove(share);
+    }
 }

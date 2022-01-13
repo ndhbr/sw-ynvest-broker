@@ -33,19 +33,40 @@
         <div class="row">
             <div class="col">
                 <h3>Performance</h3>
-                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
-                    <label class="btn btn-outline-primary" for="btnradio1">Tag</label>
-
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="btnradio2">Woche</label>
-
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="btnradio3">Monat</label>
-
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
-                    <label class="btn btn-outline-primary" for="btnradio3">Jahr</label>
+                <div class="btn-group">
+                    <a href="?period=day" class="btn btn-outline-primary"
+                       th:classappend="${period == null || period == 'day'} ? 'active' : ''">Tag</a>
+                    <a href="?period=week" class="btn btn-outline-primary"
+                       th:classappend="${period == 'week'} ? 'active' : ''">Woche</a>
+                    <a href="?period=month" class="btn btn-outline-primary"
+                       th:classappend="${period == 'month'} ? 'active' : ''">Monat</a>
+                    <a href="?period=year" class="btn btn-outline-primary"
+                       th:classappend="${period == 'year'} ? 'active' : ''">Jahr</a>
                 </div>
+
+                <!--
+                <form th:method="get">
+                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                        <input type="radio" class="btn-check" name="period" value="day" id="btnradio1"
+                               autocomplete="off" checked>
+                        <label class="btn btn-outline-primary" for="btnradio1">Tag</label>
+
+                        <input type="radio" class="btn-check" name="period" value="week" id="btnradio2"
+                               autocomplete="off">
+                        <label class="btn btn-outline-primary" for="btnradio2">Woche</label>
+
+                        <input type="radio" class="btn-check" name="period" value="month" id="btnradio3"
+                               autocomplete="off">
+                        <label class="btn btn-outline-primary" for="btnradio3">Monat</label>
+
+                        <input type="radio" class="btn-check" name="period" value="year" id="btnradio4"
+                               autocomplete="off">
+                        <label class="btn btn-outline-primary" for="btnradio4">Jahr</label>
+
+                        <input type="submit" class="btn-primary" />
+                    </div>
+                </form>
+                -->
                 <canvas class="my-4 w-100" id="stock-chart" width="900" height="380"></canvas>
             </div>
         </div>
@@ -61,19 +82,19 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input th:type="hidden" th:field="*{isin}" th:value="${stockOrder.getIsin()}" />
-                        <input th:type="hidden" th:field="*{unitPrice}" th:value="${stockOrder.getUnitPrice()}" />
-                               <!-- th:value="${T(de.ndhbr.ynvest.entity.OrderType).Sell.name()}"> -->
+                        <p>
+                            Anteile im Besitz: <label th:text="${share.getQuantity()}"></label>
+                        </p>
 
-                        <div class="form-input-group">
-                            <select class="form-control form-control-dark" id="Type" th:field="*{type}">
-                                <option th:each="type : ${T(de.ndhbr.ynvest.entity.OrderType).values()}"
-                                        th:value="${type}" th:text="${type}"></option>
-                            </select>
-                            <input th:field="*{quantity}" type="number" class="form-control form-control-dark"
-                                   id="Quantity" th:max="${share.getQuantity()}" min="1"
-                                   placeholder="Anzahl">
-                        </div>
+                        <input th:type="hidden" th:field="*{isin}" th:value="${stockOrder.getIsin()}"/>
+                        <input th:type="hidden" th:field="*{unitPrice}" th:value="${stockOrder.getUnitPrice()}"/>
+                        <input th:type="hidden" id="type" name="type"
+                               th:value="${T(de.ndhbr.ynvest.entity.OrderType).Sell}"/>
+
+                        <label for="sellQuantity">Wie viele Anteile möchtest du verkaufen?</label>
+                        <input th:field="*{quantity}" type="number" class="form-control form-control-dark"
+                               id="sellQuantity" th:max="${share.getQuantity()}" min="1"
+                               placeholder="Anzahl">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -98,17 +119,17 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Verfügbares Guthaben: <label th:text="${virtualBalance}"></label> €
+                        <p>
+                            Verfügbares Guthaben: <label th:text="${virtualBalance}"></label> €
+                        </p>
 
                         <input th:type="hidden" th:field="*{isin}" th:value="${stockOrder.getIsin()}"/>
                         <input th:type="hidden" th:field="*{unitPrice}" th:value="${stockOrder.getUnitPrice()}"/>
 
-                        <div class="form-input-group">
-                            <label for="Quantity">Wie viele Anteile möchtest du kaufen?</label>
-                            <input th:field="*{quantity}" type="number" class="form-control form-control-dark"
-                                   id="Quantity" th:max="${virtualBalance / stockOrder.getUnitPrice()}" min="1"
-                                   placeholder="Anzahl">
-                        </div>
+                        <label for="buyQuantity">Wie viele Anteile möchtest du kaufen?</label>
+                        <input th:field="*{quantity}" type="number" class="form-control form-control-dark"
+                               id="buyQuantity" th:max="${virtualBalance / stockOrder.getUnitPrice()}" min="1"
+                               placeholder="Anzahl">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">

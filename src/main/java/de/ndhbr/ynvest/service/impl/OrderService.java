@@ -5,6 +5,8 @@ import de.ndhbr.ynvest.repository.OrderRepo;
 import de.ndhbr.ynvest.service.OrderServiceIF;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,6 +15,7 @@ import java.util.*;
 import static java.util.UUID.randomUUID;
 
 @Service
+@Transactional
 public class OrderService implements OrderServiceIF {
 
     @Autowired
@@ -27,7 +30,6 @@ public class OrderService implements OrderServiceIF {
     }
 
     @Override
-    @Transactional
     public StockOrder completeOrderById(Long orderId) throws ServiceException {
         Optional<StockOrder> foundOrder = findOrderById(orderId);
 
@@ -47,7 +49,11 @@ public class OrderService implements OrderServiceIF {
                     case Sell -> share.decreaseQuantity(order.getQuantity());
                 }
 
-                portfolio.updateShare(share);
+                if (share.getQuantity() > 0) {
+                    portfolio.updateShare(share);
+                } else {
+                    portfolio.removeShare(share);
+                }
             } else {
                 share = new Share();
                 share.setIsin(order.getIsin());
@@ -103,7 +109,18 @@ public class OrderService implements OrderServiceIF {
     }
 
     @Override
+    public double getQuantityOfAllOpenSellOrders(Customer customer) {
+        return orderRepo.getQuantityOfAllOpenSellOrdersByCustomer(customer);
+    }
+
+    @Override
     public Iterable<StockOrder> getAllOrders() {
         return orderRepo.findAll();
+    }
+
+    public Iterable<StockOrder> getOrdersByParent() {
+        return orderRepo.findAll(
+                PageRequest.of(0, 6, Sort.by("placedOn").descending())
+        );
     }
 }

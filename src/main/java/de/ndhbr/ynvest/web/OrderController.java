@@ -54,9 +54,20 @@ public class OrderController {
             Portfolio portfolio = customer.getPortfolio();
             BankAccount bankAccount = customer.getBankAccount();
 
+            // If has enough shares
             if ((stockOrder.getType() != null && stockOrder.getType() == OrderType.Sell) &&
                     portfolio.getShareQuantity(stockOrder.getIsin()) < Math.abs(stockOrder.getQuantity())) {
                 throw new ServiceException("Du besitzt leider nicht genügend Anteile dieser Firma.");
+            }
+
+            // Check for open sell orders
+            if (stockOrder.getType() == OrderType.Sell &&
+                    (portfolio.getShareQuantity(stockOrder.getIsin()) -
+                    orderService.getQuantityOfAllOpenSellOrders(customer)) <
+                    stockOrder.getQuantity()) {
+                throw new ServiceException("Du kannst keine Anteile mehr" +
+                        " verkaufen, da du bereits zu viele Verkaufsaufträge" +
+                        " zu dieser Aktie hast.");
             }
 
             if (bankAccount.getVirtualBalance() < (stockOrder.getUnitPrice() * stockOrder.getQuantity())) {
@@ -75,6 +86,8 @@ public class OrderController {
                 bankAccountService.handleNewSellOrder(bankAccount,
                         addedOrder.getQuantity() * addedOrder.getUnitPrice());
             }
+
+            model.addAttribute("success", "Der Auftrag wurde erfolgreich erstellt!");
         } catch (ServiceException e) {
             model.addAttribute("error", e.getMessage());
         }
@@ -82,7 +95,6 @@ public class OrderController {
         if (customer != null) {
             model.addAttribute("orders", customer.getOrders());
         }
-        model.addAttribute("success", "Der Auftrag wurde erfolgreich erstellt!");
         model.addAttribute("content", "orders");
         return "index";
     }

@@ -1,6 +1,7 @@
 package de.ndhbr.ynvest.entity;
 
 import de.ndhbr.ynvest.entity.util.SingleIdEntity;
+import de.ndhbr.ynvest.util.MathUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -70,12 +71,20 @@ public class BankAccount extends SingleIdEntity<String> {
         return balance;
     }
 
+    public double getRoundedBalance() {
+        return MathUtils.round(getBalance(), 2);
+    }
+
     public void setBalance(double balance) {
         this.balance = balance;
     }
 
     public double getVirtualBalance() {
         return virtualBalance;
+    }
+
+    public double getRoundedVirtualBalance() {
+        return MathUtils.round(getVirtualBalance(), 2);
     }
 
     public void setVirtualBalance(double virtualBalance) {

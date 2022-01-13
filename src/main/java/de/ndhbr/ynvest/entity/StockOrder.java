@@ -1,6 +1,7 @@
 package de.ndhbr.ynvest.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.ndhbr.ynvest.util.MathUtils;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
@@ -71,6 +72,10 @@ public class StockOrder {
 
     public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public double getRoundedTotalPrice() {
+        return MathUtils.round(getUnitPrice() * getQuantity(), 2);
     }
 
     public String getEventUrl() {

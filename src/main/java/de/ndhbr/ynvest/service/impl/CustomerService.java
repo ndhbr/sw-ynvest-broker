@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class CustomerService implements CustomerServiceIF {
 
     @Autowired
@@ -41,7 +42,6 @@ public class CustomerService implements CustomerServiceIF {
     }
 
     @Override
-    @Transactional
     public Customer registerCustomer(Customer customer) throws ServiceException {
         Optional<Customer> foundCustomer = customerRepo.findById(customer.getID());
 
@@ -75,7 +75,6 @@ public class CustomerService implements CustomerServiceIF {
     }
 
     @Override
-    @Transactional
     public void addOrder(StockOrder stockOrder, Customer customer) {
         if (customer != null) {
             customer.addOrder(stockOrder);

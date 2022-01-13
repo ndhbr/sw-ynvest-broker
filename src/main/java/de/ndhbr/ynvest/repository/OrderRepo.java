@@ -14,4 +14,8 @@ public interface OrderRepo extends PagingAndSortingRepository<StockOrder, Long> 
             "quantity * unitPrice) + " + Constants.TRANSACTION_FEE +
             ") FROM StockOrder WHERE customer = :#{#customer} AND status = 'Open'")
     double getSumOfAllOpenOrdersByCustomer(@Param("customer") Customer customer);
+
+    @Query("SELECT COALESCE(SUM(quantity), 0) FROM StockOrder WHERE customer = :#{#customer}" +
+            " AND status = 'Open'")
+    int getQuantityOfAllOpenSellOrdersByCustomer(@Param("customer") Customer customer);
 }
