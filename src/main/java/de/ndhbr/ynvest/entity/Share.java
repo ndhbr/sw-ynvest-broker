@@ -1,12 +1,16 @@
 package de.ndhbr.ynvest.entity;
 
+import com.sun.istack.NotNull;
 import org.hibernate.service.spi.ServiceException;
 
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotBlank;
 
 @Embeddable
 public class Share {
+    @NotBlank
     private String isin;
+    @NotNull
     private int quantity;
 
     public String getIsin() {

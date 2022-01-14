@@ -1,5 +1,6 @@
 package de.ndhbr.ynvest.service.impl;
 
+import de.ndhbr.ynvest.configuration.LoggerConf;
 import de.ndhbr.ynvest.entity.*;
 import de.ndhbr.ynvest.repository.OrderRepo;
 import de.ndhbr.ynvest.service.OrderServiceIF;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.logging.Logger;
 
 import static java.util.UUID.randomUUID;
 
@@ -23,6 +25,9 @@ public class OrderService implements OrderServiceIF {
 
     @Autowired
     private PortfolioService portfolioService;
+
+    @Autowired
+    private Logger logger;
 
     @Override
     public Optional<StockOrder> findOrderById(Long orderId) {
@@ -79,7 +84,7 @@ public class OrderService implements OrderServiceIF {
 
     @Override
     public StockOrder createOrder(StockOrder stockOrder, Customer customer) {
-        stockOrder.setOrderId(randomUUID().getMostSignificantBits() & Long.MAX_VALUE);
+        stockOrder.setOrderId(randomUUID().getMostSignificantBits() & Long.MAX_VALUE); // TODO: Remove
         stockOrder.setCustomer(customer);
         stockOrder.setPlacedOn(new Date());
 

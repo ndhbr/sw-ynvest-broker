@@ -7,16 +7,17 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotBlank;
 import java.util.Random;
 
 @Entity
 public class BankAccount extends SingleIdEntity<String> {
     @Id
     @Column(length=64)
+    @NotBlank
     private String iban;
-    private String username;
-    private String password;
-    private String eventUrl;
+    private String username; // TODO: Remove?
+    private String password; // TODO: Remove?
     private double balance = 0;
     private double virtualBalance = 0;
     @OneToOne(mappedBy = "bankAccount")
@@ -57,14 +58,6 @@ public class BankAccount extends SingleIdEntity<String> {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getEventUrl() {
-        return eventUrl;
-    }
-
-    public void setEventUrl(String eventUrl) {
-        this.eventUrl = eventUrl;
     }
 
     public double getBalance() {

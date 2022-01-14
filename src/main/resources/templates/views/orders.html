@@ -28,7 +28,7 @@
             <td><label th:text="${order.getType()}"></label></td>
             <td>x<label th:text="${order.getQuantity()}"></label></td>
             <td><label th:text="${order.getUnitPrice()}"></label> €</td>
-            <td><label th:text="${order.getStatus().name()}"></label></td>
+            <td><label th:text="${order.getStatus()}"></label></td>
             <td><label th:text="${order.getRoundedTotalPrice()}"></label> €</td>
             <td><label th:text="${order.getPlacedOnHumanReadable()}"></label></td>
         </tr>

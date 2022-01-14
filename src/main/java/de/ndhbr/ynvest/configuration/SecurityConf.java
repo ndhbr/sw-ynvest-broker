@@ -19,7 +19,11 @@ import java.util.stream.Stream;
 public class SecurityConf extends WebSecurityConfigurerAdapter {
 
     public static final String[] STATIC_PATHS = {
-            "/style/**", "/js/**", "/img/**", "/fonts/**", "/api/**"
+            "/style/**", "/js/**", "/img/**", "/fonts/**"
+    };
+
+    public static final String[] ALLOW_API_ACCESS = {
+            "/api/**"
     };
 
     private static final String[] ALLOW_ACCESS_WITHOUT_AUTHENTICATION = {
@@ -66,6 +70,11 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                 .antMatchers(ALLOW_VERIFIED_ACCESS)
                 .hasRole("VERIFIED")
                 .and()
+                // API Access
+                .authorizeRequests()
+                .antMatchers(ALLOW_API_ACCESS)
+                .hasRole("API_USER")
+                .and()
                 // Not verified login sufficient
                 .authorizeRequests()
                 .anyRequest()
@@ -84,7 +93,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/?logout")
                 .permitAll()
                 .and()
-                .rememberMe();
+                .httpBasic();
 
         // Cross-Site Request Forgery ausschalten
         http.csrf().disable();

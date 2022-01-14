@@ -1,10 +1,12 @@
 package de.ndhbr.ynvest.entity;
 
+import com.sun.istack.NotNull;
 import de.ndhbr.ynvest.entity.util.SingleIdEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -14,11 +16,15 @@ import java.util.List;
 public class Customer extends SingleIdEntity<String> implements UserDetails {
     @Id
     @Column(length = 100)
+    @NotBlank
     private String email;
+    @NotBlank
     private String name;
+    @NotBlank
     private String password;
     @Enumerated(EnumType.STRING)
     private CustomerType customerType = CustomerType.ROLE_NOT_VERIFIED;
+    @NotNull
     private Date registeredOn;
     @Embedded
     private Address address;

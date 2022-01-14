@@ -5,6 +5,7 @@ import de.ndhbr.ynvest.entity.Customer;
 import de.ndhbr.ynvest.service.CustomerServiceIF;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -70,18 +71,16 @@ public class CustomerController {
     }
 
     @RequestMapping(value = "/verify", method = RequestMethod.POST)
-    @Transactional
     public String verifyAction(@ModelAttribute("address") Address address,
                                HttpServletRequest request,
                                Locale locale, ModelMap model,
                                Principal user) {
         try {
-            String userId = SecurityContextHolder.getContext()
-                    .getAuthentication().getName();
-            Customer customer = customerService.getCustomerByEmail(userId);
+            Customer customer = (Customer) SecurityContextHolder.getContext()
+                    .getAuthentication().getPrincipal();
 
             customer.setAddress(address);
-            customerService.verifyCustomer(customer);
+            customer = customerService.verifyCustomer(customer);
 
             model.addAttribute("customer", customer);
         } catch (ServiceException e) {

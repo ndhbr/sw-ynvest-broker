@@ -12,13 +12,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class CustomerService implements CustomerServiceIF {
 
     @Autowired
@@ -46,19 +44,22 @@ public class CustomerService implements CustomerServiceIF {
         Optional<Customer> foundCustomer = customerRepo.findById(customer.getID());
 
         if (foundCustomer.isEmpty()) {
-            // Create portfolio
-            Portfolio portfolio = portfolioService.savePortfolio(new Portfolio());
+            if (customer.getCustomerType() != CustomerType.ROLE_API_USER) {
+                // Create portfolio
+                Portfolio portfolio = portfolioService.savePortfolio(new Portfolio());
 
-            // Create bank account
-            // TODO: SCHNITTSTELLE ZU SINA BANK!
-            BankAccount bankAccount = new BankAccount();
-            bankAccount.setRandomIbanTmp(); // TODO: Replace with account creation in Amann Bank
-            bankAccount.setBalance(10000);
-            bankAccount.setVirtualBalance(10000);
-            bankAccountService.saveBankAccount(bankAccount);
+                // Create bank account
+                // TODO: SCHNITTSTELLE ZU SINA BANK!
+                BankAccount bankAccount = new BankAccount();
+                bankAccount.setRandomIbanTmp(); // TODO: Replace with account creation in Amann Bank
+                bankAccount.setBalance(10000);
+                bankAccount.setVirtualBalance(10000);
+                bankAccountService.saveBankAccount(bankAccount);
 
-            customer.setPortfolio(portfolio);
-            customer.setBankAccount(bankAccount);
+                customer.setPortfolio(portfolio);
+                customer.setBankAccount(bankAccount);
+            }
+
             customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
             customer.setRegisteredOn(new Date());
 

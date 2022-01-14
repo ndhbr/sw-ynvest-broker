@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.Locale;
 
@@ -42,7 +41,6 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/orders", method = RequestMethod.POST)
-    @Transactional
     public String orderAction(@ModelAttribute("stockOrder") StockOrder stockOrder,
                               Locale locale, ModelMap model, Principal user) {
         String userId = SecurityContextHolder.getContext()

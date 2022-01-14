@@ -1,9 +1,11 @@
 package de.ndhbr.ynvest.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sun.istack.NotNull;
 import de.ndhbr.ynvest.util.MathUtils;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,15 +17,20 @@ public class StockOrder {
     @JsonProperty("orderId")
     private long orderId;
     @Enumerated(EnumType.STRING)
+    @NotNull
     private OrderType type;
     @Enumerated(EnumType.STRING)
+    @NotNull
     private OrderStatus status;
+    @NotBlank
     private String isin;
+    @NotNull
     private int quantity;
+    @NotNull
     private double unitPrice;
-    private String eventUrl;
     @ManyToOne
     private Customer customer;
+    @NotNull
     private Date placedOn;
 
     public long getOrderId() {
@@ -76,14 +83,6 @@ public class StockOrder {
 
     public double getRoundedTotalPrice() {
         return MathUtils.round(getUnitPrice() * getQuantity(), 2);
-    }
-
-    public String getEventUrl() {
-        return eventUrl;
-    }
-
-    public void setEventUrl(String eventUrl) {
-        this.eventUrl = eventUrl;
     }
 
     public Customer getCustomer() {

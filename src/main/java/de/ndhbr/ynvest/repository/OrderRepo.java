@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrderRepo extends PagingAndSortingRepository<StockOrder, Long> {
-    @Query("SELECT SUM((CASE WHEN type = 'Sell' THEN -1 ELSE 1 END *" +
+    @Query("SELECT COALESCE(SUM((CASE WHEN type = 'Sell' THEN -1 ELSE 1 END *" +
             "quantity * unitPrice) + " + Constants.TRANSACTION_FEE +
-            ") FROM StockOrder WHERE customer = :#{#customer} AND status = 'Open'")
+            "), 0) FROM StockOrder WHERE customer = :#{#customer} AND status = 'Open'")
     double getSumOfAllOpenOrdersByCustomer(@Param("customer") Customer customer);
 
     @Query("SELECT COALESCE(SUM(quantity), 0) FROM StockOrder WHERE customer = :#{#customer}" +
