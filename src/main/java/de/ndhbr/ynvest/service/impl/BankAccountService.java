@@ -5,12 +5,11 @@ import de.ndhbr.ynvest.repository.BankAccountRepo;
 import de.ndhbr.ynvest.service.BankAccountServiceIF;
 import de.ndhbr.ynvest.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-
 @Service
-@Transactional
+@Scope("singleton")
 public class BankAccountService implements BankAccountServiceIF {
 
     @Autowired

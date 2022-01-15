@@ -19,6 +19,7 @@ import java.security.Principal;
 import java.util.Locale;
 
 @Controller
+@Scope("singleton")
 public class CustomerController {
 
     @Autowired

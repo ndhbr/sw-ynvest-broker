@@ -6,8 +6,10 @@ import de.ndhbr.ynvest.service.CustomerServiceIF;
 import de.ndhbr.ynvest.service.OrderServiceIF;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,7 @@ import java.security.Principal;
 import java.util.Locale;
 
 @Controller
+@Scope("singleton")
 public class OrderController {
 
     @Autowired
@@ -41,6 +44,7 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/orders", method = RequestMethod.POST)
+    @Transactional
     public String orderAction(@ModelAttribute("stockOrder") StockOrder stockOrder,
                               Locale locale, ModelMap model, Principal user) {
         String userId = SecurityContextHolder.getContext()
@@ -48,42 +52,12 @@ public class OrderController {
         Customer customer = null;
 
         try {
+            // Customer
             customer = customerService.getCustomerByEmail(userId);
-            Portfolio portfolio = customer.getPortfolio();
-            BankAccount bankAccount = customer.getBankAccount();
-
-            // If has enough shares
-            if ((stockOrder.getType() != null && stockOrder.getType() == OrderType.Sell) &&
-                    portfolio.getShareQuantity(stockOrder.getIsin()) < Math.abs(stockOrder.getQuantity())) {
-                throw new ServiceException("Du besitzt leider nicht genügend Anteile dieser Firma.");
-            }
-
-            // Check for open sell orders
-            if (stockOrder.getType() == OrderType.Sell &&
-                    (portfolio.getShareQuantity(stockOrder.getIsin()) -
-                    orderService.getQuantityOfAllOpenSellOrders(customer)) <
-                    stockOrder.getQuantity()) {
-                throw new ServiceException("Du kannst keine Anteile mehr" +
-                        " verkaufen, da du bereits zu viele Verkaufsaufträge" +
-                        " zu dieser Aktie hast.");
-            }
-
-            if (bankAccount.getVirtualBalance() < (stockOrder.getUnitPrice() * stockOrder.getQuantity())) {
-                throw new ServiceException("Du hast leider nicht genug Geld auf deinem Guthaben.");
-            }
 
             // Create order
             StockOrder addedOrder = orderService.createOrder(stockOrder, customer);
             customerService.addOrder(addedOrder, customer);
-
-            // Remove virtual money
-            if (addedOrder.getType().equals(OrderType.Buy)) {
-                bankAccountService.handleNewBuyOrder(bankAccount,
-                        addedOrder.getQuantity() * addedOrder.getUnitPrice());
-            } else {
-                bankAccountService.handleNewSellOrder(bankAccount,
-                        addedOrder.getQuantity() * addedOrder.getUnitPrice());
-            }
 
             model.addAttribute("success", "Der Auftrag wurde erfolgreich erstellt!");
         } catch (ServiceException e) {

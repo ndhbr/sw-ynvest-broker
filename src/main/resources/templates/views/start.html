@@ -4,11 +4,28 @@
 <div th:fragment="start" class="p-3">
     <div class="small-dialog" sec:authorize="isAuthenticated()">
         <h1 class="h2">Willkommen <label th:text="${customer?.getName()}"></label>,</h1>
-        <p>
-            Heute ist ein guter Tag Geld zu investieren.
-            Schau doch in deinem Depot vorbei!
-        </p>
-        <a th:href="@{/portfolio}" type="button" class="btn btn-primary btn-lg btn-block">Zum Depot</a>
+
+        <div sec:authorize="hasRole('VERIFIED')">
+            <p>
+                Heute ist ein guter Tag Geld zu investieren.
+                Schau doch in deinem Depot vorbei!
+            </p>
+            <a th:href="@{/portfolio}" type="button" class="btn btn-primary btn-lg btn-block">Zum Depot</a>
+        </div>
+        <div sec:authorize="hasRole('NOT_VERIFIED')">
+            <p>
+                Dein Konto ist noch nicht verifiziert. Vervollständige
+                jetzt deine Daten, um mit dem Wertpapierhandel loszulegen!
+            </p>
+            <a th:href="@{/verify}" type="button" class="btn btn-primary btn-lg btn-block">Verifizieren</a>
+        </div>
+        <div sec:authorize="hasRole('API_USER')">
+            <p>
+                Dieses Konto ist nur für die Nutzung der API bestimmt. Du kannst
+                keinen Wertpapierhandel betreiben.
+            </p>
+            <a th:href="@{/logout}" type="button" class="btn btn-primary btn-lg btn-block">Ausloggen</a>
+        </div>
     </div>
 
     <div class="small-dialog" sec:authorize="!isAuthenticated()">

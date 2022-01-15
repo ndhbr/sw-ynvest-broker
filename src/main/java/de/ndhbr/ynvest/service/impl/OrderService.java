@@ -1,11 +1,11 @@
 package de.ndhbr.ynvest.service.impl;
 
-import de.ndhbr.ynvest.configuration.LoggerConf;
 import de.ndhbr.ynvest.entity.*;
 import de.ndhbr.ynvest.repository.OrderRepo;
 import de.ndhbr.ynvest.service.OrderServiceIF;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 import static java.util.UUID.randomUUID;
 
 @Service
-@Transactional
+@Scope("singleton")
 public class OrderService implements OrderServiceIF {
 
     @Autowired
@@ -35,6 +35,7 @@ public class OrderService implements OrderServiceIF {
     }
 
     @Override
+    @Transactional
     public StockOrder completeOrderById(Long orderId) throws ServiceException {
         Optional<StockOrder> foundOrder = findOrderById(orderId);
 
@@ -84,18 +85,21 @@ public class OrderService implements OrderServiceIF {
 
     @Override
     public StockOrder createOrder(StockOrder stockOrder, Customer customer) {
+        Portfolio portfolio = customer.getPortfolio();
+
+        // Check for open sell orders
+        if (stockOrder.getType() == OrderType.Sell &&
+                (portfolio.getShareQuantity(stockOrder.getIsin()) -
+                        getQuantityOfAllOpenSellOrders(customer)) <
+                        stockOrder.getQuantity()) {
+            throw new ServiceException("Du kannst keine Anteile mehr" +
+                    " verkaufen, da du bereits zu viele Verkaufsaufträge" +
+                    " zu dieser Aktie hast.");
+        }
+
         stockOrder.setOrderId(randomUUID().getMostSignificantBits() & Long.MAX_VALUE); // TODO: Remove
         stockOrder.setCustomer(customer);
         stockOrder.setPlacedOn(new Date());
-
-        if (stockOrder.getType() == null) {
-            if (stockOrder.getQuantity() < 0) {
-                stockOrder.setType(OrderType.Sell);
-                stockOrder.setQuantity(Math.abs(stockOrder.getQuantity()));
-            } else {
-                stockOrder.setType(OrderType.Buy);
-            }
-        }
 
         // TODO: SCHNITTSTELLE STEFAN - Ask for current price
         // AND SEND IT TO HIM
@@ -106,6 +110,12 @@ public class OrderService implements OrderServiceIF {
         stockOrder.setStatus(OrderStatus.Open);
 
         return orderRepo.save(stockOrder);
+    }
+
+
+    @Override
+    public List<StockOrder> getOpenOrdersByIsin(Customer customer, String isin) {
+        return orderRepo.getOpenOrdersByIsin(customer, isin);
     }
 
     @Override

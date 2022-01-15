@@ -3,6 +3,7 @@
 <body>
 <div th:fragment="portfolio" class="p-3">
     <h1 class="h2">Dein Depot</h1>
+    <hr />
 
     <div id="portfolio-actions">
         <small class="text-muted">Portfoliowert</small>
@@ -16,7 +17,16 @@
     </div>
 
     <div id="portfolio-values">
-        <table class="table table-hover table-dark">
+        <h2 class="h3">Wertpapiere</h2>
+        <hr />
+
+        <div class="empty-list" th:if="${#lists.isEmpty(shares)}">
+            <span data-feather="dollar-sign"></span>
+            <p>Noch keine Wertpapiere vorhanden</p>
+        </div>
+
+        <table class="table table-hover table-dark"
+               th:unless="${#lists.isEmpty(shares)}">
             <thead>
             <tr>
                 <th scope="col">Wertpapier</th>

@@ -6,12 +6,12 @@ import de.ndhbr.ynvest.service.BankAccountServiceIF;
 import de.ndhbr.ynvest.service.OrderServiceIF;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
-
 @RestController
-@Transactional
+@Scope("singleton")
 @RequestMapping(path = "/api")
 public class ApiController {
 
@@ -38,6 +38,7 @@ public class ApiController {
     }
 
     @PatchMapping("/bankAccounts/{iban}")
+    @Transactional
     public String updateBankAccount(@PathVariable String iban,
                                     @RequestBody BankAccount bankAccount) {
         ApiResponse result;

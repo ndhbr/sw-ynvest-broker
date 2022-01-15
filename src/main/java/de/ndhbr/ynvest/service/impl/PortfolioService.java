@@ -4,12 +4,13 @@ import de.ndhbr.ynvest.entity.Portfolio;
 import de.ndhbr.ynvest.repository.PortfolioRepo;
 import de.ndhbr.ynvest.service.PortfolioServiceIF;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
 @Service
-@Transactional
+@Scope("singleton")
 public class PortfolioService implements PortfolioServiceIF {
 
     @Autowired

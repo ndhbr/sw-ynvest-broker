@@ -36,7 +36,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     };
 
     private static final String[] ALLOW_VERIFIED_ACCESS = {
-            "/orders/**", "/portfolio/**", "/performance/**"
+            "/orders/**", "/portfolio/**", "/performance/**",
+            "/search/**"
     };
 
     @Autowired
@@ -78,7 +79,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                 // Not verified login sufficient
                 .authorizeRequests()
                 .anyRequest()
-                .authenticated();
+                .denyAll();
 
         http
                 .formLogin()

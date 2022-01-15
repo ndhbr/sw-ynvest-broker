@@ -3,6 +3,7 @@
 <body>
 <div th:fragment="share" class="p-3">
     <h1 class="h2">{Share_Name}</h1>
+    <hr/>
 
     <div class="container g-0">
         <div class="row">
@@ -32,7 +33,8 @@
         </div>
         <div class="row">
             <div class="col">
-                <h3>Performance</h3>
+                <h2 class="h3">Performance</h2>
+                <hr/>
                 <div class="btn-group">
                     <a href="?period=day" class="btn btn-outline-primary"
                        th:classappend="${period == null || period == 'day'} ? 'active' : ''">Tag</a>
@@ -43,31 +45,38 @@
                     <a href="?period=year" class="btn btn-outline-primary"
                        th:classappend="${period == 'year'} ? 'active' : ''">Jahr</a>
                 </div>
-
-                <!--
-                <form th:method="get">
-                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                        <input type="radio" class="btn-check" name="period" value="day" id="btnradio1"
-                               autocomplete="off" checked>
-                        <label class="btn btn-outline-primary" for="btnradio1">Tag</label>
-
-                        <input type="radio" class="btn-check" name="period" value="week" id="btnradio2"
-                               autocomplete="off">
-                        <label class="btn btn-outline-primary" for="btnradio2">Woche</label>
-
-                        <input type="radio" class="btn-check" name="period" value="month" id="btnradio3"
-                               autocomplete="off">
-                        <label class="btn btn-outline-primary" for="btnradio3">Monat</label>
-
-                        <input type="radio" class="btn-check" name="period" value="year" id="btnradio4"
-                               autocomplete="off">
-                        <label class="btn btn-outline-primary" for="btnradio4">Jahr</label>
-
-                        <input type="submit" class="btn-primary" />
-                    </div>
-                </form>
-                -->
                 <canvas class="my-4 w-100" id="stock-chart" width="900" height="380"></canvas>
+
+                <div th:unless="${#lists.isEmpty(orders)}">
+                    <h2 class="h3">Offene Aufträge</h2>
+                    <hr/>
+
+                    <table class="table table-striped table-hover table-dark mt-3">
+                        <thead>
+                        <tr>
+                            <th scope="col">Auftragsnummer</th>
+                            <th scope="col">Typ</th>
+                            <th scope="col">Menge</th>
+                            <th scope="col">Stückpreis</th>
+                            <th scope="col">Gesamtpreis</th>
+                            <th scope="col">Platziert am</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="order : ${orders}">
+                            <th scope="row">
+                                <label th:text="${order.getOrderId()}"></label>
+                            </th>
+                            <td><label th:text="${order.getType()}"></label></td>
+                            <td>x<label th:text="${order.getQuantity()}"></label></td>
+                            <td><label th:text="${order.getUnitPrice()}"></label> €</td>
+                            <td><label th:text="${order.getRoundedTotalPrice()}"></label> €</td>
+                            <td><label th:text="${order.getPlacedOnHumanReadable()}"></label></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -88,8 +97,9 @@
 
                         <input th:type="hidden" th:field="*{isin}" th:value="${stockOrder.getIsin()}"/>
                         <input th:type="hidden" th:field="*{unitPrice}" th:value="${stockOrder.getUnitPrice()}"/>
-                        <input th:type="hidden" id="type" name="type"
-                               th:value="${T(de.ndhbr.ynvest.entity.OrderType).Sell}"/>
+                        <!--<input th:type="hidden" id="type" name="type"
+                               th:value="${T(de.ndhbr.ynvest.entity.OrderType).Sell}"/>-->
+                        <input th:type="hidden" name="type" value="Sell"/>
 
                         <label for="sellQuantity">Wie viele Anteile möchtest du verkaufen?</label>
                         <input th:field="*{quantity}" type="number" class="form-control form-control-dark"
@@ -125,6 +135,7 @@
 
                         <input th:type="hidden" th:field="*{isin}" th:value="${stockOrder.getIsin()}"/>
                         <input th:type="hidden" th:field="*{unitPrice}" th:value="${stockOrder.getUnitPrice()}"/>
+                        <input th:type="hidden" name="type" value="Buy"/>
 
                         <label for="buyQuantity">Wie viele Anteile möchtest du kaufen?</label>
                         <input th:field="*{quantity}" type="number" class="form-control form-control-dark"

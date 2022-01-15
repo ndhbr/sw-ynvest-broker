@@ -172,3 +172,22 @@ body {
   text-decoration: none;
   cursor: pointer;
 }
+
+/*
+ * Lists
+ */
+.empty-list {
+  text-align: center;
+  display: block;
+  padding: 32px;
+
+  svg {
+    width: 32px;
+    height: 32px;
+    color: $llGreyOnDark;
+  }
+
+  p {
+    margin-top: 8px;
+  }
+}

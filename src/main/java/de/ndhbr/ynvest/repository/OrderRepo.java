@@ -3,10 +3,13 @@ package de.ndhbr.ynvest.repository;
 import de.ndhbr.ynvest.entity.Customer;
 import de.ndhbr.ynvest.entity.StockOrder;
 import de.ndhbr.ynvest.util.Constants;
+import org.apache.catalina.util.CustomObjectInputStream;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface OrderRepo extends PagingAndSortingRepository<StockOrder, Long> {
@@ -18,4 +21,8 @@ public interface OrderRepo extends PagingAndSortingRepository<StockOrder, Long> 
     @Query("SELECT COALESCE(SUM(quantity), 0) FROM StockOrder WHERE customer = :#{#customer}" +
             " AND status = 'Open'")
     int getQuantityOfAllOpenSellOrdersByCustomer(@Param("customer") Customer customer);
+
+    @Query("FROM StockOrder WHERE customer = :#{#customer} AND isin = :#{#isin}" +
+            " AND status = 'Open' ORDER BY placedOn DESC")
+    List<StockOrder> getOpenOrdersByIsin(@Param("customer") Customer customer, String isin);
 }
