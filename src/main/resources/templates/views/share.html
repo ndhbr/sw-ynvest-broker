@@ -2,7 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 <div th:fragment="share" class="p-3">
-    <h1 class="h2">{Share_Name}</h1>
+    <h1 class="h2">
+        <label th:text="${shareDetails?.getName() ?: 'n/a'}"></label>
+    </h1>
     <hr/>
 
     <div class="container g-0">
@@ -10,8 +12,8 @@
             <div class="col">
                 <small class="text-muted">Aktueller Kurswert</small>
                 <h2 class="portfolio-value">
-                    <label th:text="${stockOrder.getUnitPrice()}"></label> €
-                    <span class="stock-positive subbed">+X.X%</span>
+                    <label th:text="${shareDetails?.getCurrentPrice() ?: 'n/a'}"></label> €
+                    <span class="stock-positive subbed">+n/a%</span>
                 </h2>
                 <p class="text-muted">
                     ISIN: <label th:text="${share.getIsin()}"></label><br/>
@@ -154,6 +156,16 @@
             </form>
         </div>
     </div>
+
+    <!-- Stock chart -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+
+        const marketValues = /*[[${shareDetails?.marketValues}]]*/ [];
+        console.log(marketValues);
+
+        /*]]>*/
+    </script>
 </div>
 </body>
 </html>

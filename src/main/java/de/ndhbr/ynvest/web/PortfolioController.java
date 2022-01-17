@@ -1,8 +1,11 @@
 package de.ndhbr.ynvest.web;
 
+import de.ndhbr.ynvest.api.client.StockExchangeClient;
 import de.ndhbr.ynvest.entity.*;
 import de.ndhbr.ynvest.service.CustomerServiceIF;
 import de.ndhbr.ynvest.service.OrderServiceIF;
+import de.othr.sw.yetra.dto.ShareDetailsDTO;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -27,6 +30,9 @@ public class PortfolioController {
     @Autowired
     OrderServiceIF orderService;
 
+    @Autowired
+    StockExchangeClient stockExchange;
+
     @RequestMapping
     public String portfolio(Locale locale, ModelMap model, Principal user) {
         Customer customer = customerService.getCustomerByEmail(user.getName());
@@ -35,6 +41,7 @@ public class PortfolioController {
 
         if (portfolio != null) {
             List<Share> shares = portfolio.getShares();
+
             model.addAttribute("shares", shares);
         }
 
@@ -57,6 +64,13 @@ public class PortfolioController {
         Optional<Share> userShare = portfolio.getShareByIsin(isin);
         StockOrder stockOrder = new StockOrder();
 
+        try {
+            ShareDetailsDTO shareDetails = stockExchange.getShareDetails(isin);
+            model.addAttribute("shareDetails", shareDetails);
+        } catch (ServiceException e) {
+            model.addAttribute("error", e.getMessage());
+        }
+
         userShare.ifPresent(value -> {
             share.setQuantity(value.getQuantity());
             stockOrder.setQuantity(value.getQuantity());
@@ -64,12 +78,9 @@ public class PortfolioController {
         share.setIsin(isin);
         stockOrder.setIsin(isin);
 
-        // TODO: Fetch from Stefan
-        stockOrder.setUnitPrice(100);
-
         model.addAttribute("orders", orders);
         model.addAttribute("stockOrder", stockOrder);
-        model.addAttribute("virtualBalance", bankAccount.getVirtualBalance());
+        model.addAttribute("virtualBalance", bankAccount.getRoundedVirtualBalance());
         model.addAttribute("share", share);
         model.addAttribute("period", period);
         model.addAttribute("content", "share");

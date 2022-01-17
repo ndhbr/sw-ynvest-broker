@@ -17,9 +17,7 @@
     <description>Der #1 Online-Broker in Deutschland</description>
 
     <properties>
-        <java.version>16</java.version>
-        <maven.compiler.source>16</maven.compiler.source>
-        <maven.compiler.target>16</maven.compiler.target>
+        <java.version>14</java.version>
     </properties>
 
     <dependencies>
@@ -72,6 +70,25 @@
             <artifactId>hibernate-validator</artifactId>
             <version>7.0.2.Final</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+            <version>2.6.2</version>
+        </dependency>
+
+        <!-- Stefan yetra -->
+        <dependency>
+            <groupId>de.othr.sw</groupId>
+            <artifactId>yetra</artifactId>
+            <version>0.2</version>
+        </dependency>
+
+        <!-- Sina eBank -->
+        <dependency>
+            <groupId>eBank</groupId>
+            <artifactId>DTO</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -79,6 +96,17 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>de.ndhbr.ynvest.ynvestApplication</mainClass>
+                    <executable>true</executable>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>

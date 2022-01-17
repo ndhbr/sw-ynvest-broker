@@ -1,5 +1,6 @@
 package de.ndhbr.ynvest.service.impl;
 
+import de.ndhbr.ynvest.api.client.StockExchangeClientIF;
 import de.ndhbr.ynvest.entity.*;
 import de.ndhbr.ynvest.repository.OrderRepo;
 import de.ndhbr.ynvest.service.OrderServiceIF;
@@ -14,8 +15,6 @@ import javax.transaction.Transactional;
 import java.util.*;
 import java.util.logging.Logger;
 
-import static java.util.UUID.randomUUID;
-
 @Service
 @Scope("singleton")
 public class OrderService implements OrderServiceIF {
@@ -27,11 +26,19 @@ public class OrderService implements OrderServiceIF {
     private PortfolioService portfolioService;
 
     @Autowired
+    private StockExchangeClientIF stockExchange;
+
+    @Autowired
     private Logger logger;
 
     @Override
     public Optional<StockOrder> findOrderById(Long orderId) {
         return orderRepo.findById(orderId);
+    }
+
+    @Override
+    public StockOrder saveOrder(StockOrder stockOrder) {
+        return orderRepo.save(stockOrder);
     }
 
     @Override
@@ -74,8 +81,8 @@ public class OrderService implements OrderServiceIF {
             // -> Amount to stock exchange (yetra)
 
             portfolioService.savePortfolio(portfolio);
-            order.setStatus(OrderStatus.Completed);
 
+            // TODO: not needed?
             return orderRepo.save(order);
         } else {
             // TODO: Not found exception
@@ -97,17 +104,16 @@ public class OrderService implements OrderServiceIF {
                     " zu dieser Aktie hast.");
         }
 
-        stockOrder.setOrderId(randomUUID().getMostSignificantBits() & Long.MAX_VALUE); // TODO: Remove
         stockOrder.setCustomer(customer);
-        stockOrder.setPlacedOn(new Date());
 
-        // TODO: SCHNITTSTELLE STEFAN - Ask for current price
-        // AND SEND IT TO HIM
-        if (stockOrder.getUnitPrice() != 100.0) {
+        double stockPrice = stockExchange.getSharePrice(stockOrder.getIsin());
+        if (stockOrder.getUnitPrice() > stockPrice * 1.05 ||
+                stockOrder.getUnitPrice() < stockPrice * 0.95) {
             throw new ServiceException("Der Auftragspreis hat sich in der Zwischenzeit verändert. Versuche es erneut.");
         }
 
-        stockOrder.setStatus(OrderStatus.Open);
+        // create order in stock exchange yetra
+        stockOrder = stockExchange.createOrder(stockOrder);
 
         return orderRepo.save(stockOrder);
     }

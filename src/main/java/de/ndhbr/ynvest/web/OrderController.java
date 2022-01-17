@@ -7,6 +7,7 @@ import de.ndhbr.ynvest.service.OrderServiceIF;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,7 @@ public class OrderController {
     BankAccountServiceIF bankAccountService;
 
     @RequestMapping("/orders")
-    public String orders(Locale locale, ModelMap model, Principal user) {
+    public String orders(Locale locale, ModelMap model) {
         String userId = SecurityContextHolder.getContext()
                 .getAuthentication().getName();
         Customer customer = customerService.getCustomerByEmail(userId);

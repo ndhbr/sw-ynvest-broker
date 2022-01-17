@@ -1,5 +1,7 @@
 package de.ndhbr.ynvest.jms;
 
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.ndhbr.ynvest.util.Constants;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQQueue;
@@ -13,12 +15,12 @@ import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
 
 import javax.jms.Queue;
-/*
+
 @Configuration
 @EnableJms
 public class MessagingConfiguration {
 
-    @Value("${labresources.active-mq-broker-url")
+    @Value("${spring.activemq.broker-url}")
     private String brokerUrl;
 
     @Bean
@@ -46,7 +48,14 @@ public class MessagingConfiguration {
         converter = new MappingJackson2MessageConverter();
         converter.setTargetType(MessageType.TEXT);
         converter.setTypeIdPropertyName("_type");
+        converter.setObjectMapper(jsonMapper());
         return converter;
     }
+
+    @Bean
+    public JsonMapper jsonMapper() {
+        return JsonMapper.builder()
+                .addModule(new JavaTimeModule())
+                .build();
+    }
 }
-*/

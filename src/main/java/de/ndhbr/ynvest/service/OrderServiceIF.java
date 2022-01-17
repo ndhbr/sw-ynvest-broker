@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface OrderServiceIF {
     Optional<StockOrder> findOrderById(Long orderId);
+    StockOrder saveOrder(StockOrder stockOrder);
     StockOrder completeOrderById(Long orderId) throws ServiceException;
     StockOrder createOrder(StockOrder stockOrder, Customer customer);
     List<StockOrder> getOpenOrdersByIsin(Customer customer, String isin);

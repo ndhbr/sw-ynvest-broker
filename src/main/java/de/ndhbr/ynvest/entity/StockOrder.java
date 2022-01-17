@@ -2,11 +2,13 @@ package de.ndhbr.ynvest.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
-import de.ndhbr.ynvest.util.MathUtils;
+import de.othr.sw.yetra.dto.OrderDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.Date;
 
 import static de.ndhbr.ynvest.util.MathUtils.round;
@@ -82,7 +84,7 @@ public class StockOrder {
     }
 
     public double getRoundedTotalPrice() {
-        return MathUtils.round(getUnitPrice() * getQuantity(), 2);
+        return round(getUnitPrice() * getQuantity(), 2);
     }
 
     public Customer getCustomer() {
@@ -104,5 +106,19 @@ public class StockOrder {
 
     public void setPlacedOn(Date placedOn) {
         this.placedOn = placedOn;
+    }
+
+    public void mergeWith(OrderDTO orderDTO) {
+        Instant instant = orderDTO.getTimestamp().toInstant(ZoneOffset.UTC);
+
+        setOrderId(orderDTO.getId());
+        setPlacedOn(Date.from(instant));
+        setUnitPrice(orderDTO.getUnitPrice());
+
+        if (orderDTO.getStatus() == de.othr.sw.yetra.entity.OrderStatus.OPEN) {
+            setStatus(de.ndhbr.ynvest.entity.OrderStatus.Open);
+        } else {
+            setStatus(de.ndhbr.ynvest.entity.OrderStatus.Completed);
+        }
     }
 }
