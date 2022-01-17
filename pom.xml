@@ -12,7 +12,7 @@
 
     <groupId>de.ndhbr</groupId>
     <artifactId>ynvest</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>ynvest</name>
     <description>Der #1 Online-Broker in Deutschland</description>
 
@@ -85,9 +85,9 @@
 
         <!-- Sina eBank -->
         <dependency>
-            <groupId>eBank</groupId>
-            <artifactId>DTO</artifactId>
-            <version>1.0</version>
+            <groupId>de.othr.sw</groupId>
+            <artifactId>eBank</artifactId>
+            <version>0.0.1</version>
         </dependency>
     </dependencies>
 

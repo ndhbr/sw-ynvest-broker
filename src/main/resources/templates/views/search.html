@@ -10,10 +10,10 @@
     <div class="card">
         <div class="list-group list-group-flush">
             <th:block th:each="result : ${resultList}">
-                <a th:href="@{'/portfolio/share/DE0005140008'}"
+                <a th:href="@{'/portfolio/share/' + ${result.getIsin()}}"
                    class="list-group-item list-group-item-action">
-                    <label th:text="${query}"></label> Ltd.
-                    <small class="text-muted">DE0005140008</small>
+                    <label th:text="${result.getName()}"></label>
+                    <small class="text-muted" th:text="${result.getIsin()}"></small>
                 </a>
             </th:block>
         </div>

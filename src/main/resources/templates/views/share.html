@@ -13,7 +13,11 @@
                 <small class="text-muted">Aktueller Kurswert</small>
                 <h2 class="portfolio-value">
                     <label th:text="${shareDetails?.getCurrentPrice() ?: 'n/a'}"></label> €
-                    <span class="stock-positive subbed">+n/a%</span>
+
+                    <span class="subbed stock-positive" th:if="${difference} ge 0"
+                        th:text="'+' + ${difference} + '%'"></span>
+                    <span class="subbed stock-negative" th:if="${difference} lt 0"
+                          th:text="${difference} + '%'"></span>
                 </h2>
                 <p class="text-muted">
                     ISIN: <label th:text="${share.getIsin()}"></label><br/>
@@ -38,14 +42,18 @@
                 <h2 class="h3">Performance</h2>
                 <hr/>
                 <div class="btn-group">
-                    <a href="?period=day" class="btn btn-outline-primary"
-                       th:classappend="${period == null || period == 'day'} ? 'active' : ''">Tag</a>
-                    <a href="?period=week" class="btn btn-outline-primary"
-                       th:classappend="${period == 'week'} ? 'active' : ''">Woche</a>
-                    <a href="?period=month" class="btn btn-outline-primary"
-                       th:classappend="${period == 'month'} ? 'active' : ''">Monat</a>
-                    <a href="?period=year" class="btn btn-outline-primary"
-                       th:classappend="${period == 'year'} ? 'active' : ''">Jahr</a>
+                    <a th:href="'?period=' + ${day}" class="btn btn-outline-primary"
+                       th:with="day=${T(de.othr.sw.yetra.dto.TimePeriodDTO).DAY}"
+                       th:classappend="${period == day} ? 'active' : ''">Tag</a>
+                    <a th:href="'?period=' + ${week}" class="btn btn-outline-primary"
+                       th:with="week=${T(de.othr.sw.yetra.dto.TimePeriodDTO).WEEK}"
+                       th:classappend="${period == week} ? 'active' : ''">Woche</a>
+                    <a th:href="'?period=' + ${month}" class="btn btn-outline-primary"
+                       th:with="month=${T(de.othr.sw.yetra.dto.TimePeriodDTO).MONTH}"
+                       th:classappend="${period == month} ? 'active' : ''">Monat</a>
+                    <a th:href="'?period=' + ${year}" class="btn btn-outline-primary"
+                       th:with="year=${T(de.othr.sw.yetra.dto.TimePeriodDTO).YEAR}"
+                       th:classappend="${period == year} ? 'active' : ''">Jahr</a>
                 </div>
                 <canvas class="my-4 w-100" id="stock-chart" width="900" height="380"></canvas>
 
@@ -98,7 +106,8 @@
                         </p>
 
                         <input th:type="hidden" th:field="*{isin}" th:value="${stockOrder.getIsin()}"/>
-                        <input th:type="hidden" th:field="*{unitPrice}" th:value="${stockOrder.getUnitPrice()}"/>
+                        <input th:type="hidden" th:field="*{unitPrice}"
+                               th:value="${stockOrder.getUnitPrice()}"/>
                         <!--<input th:type="hidden" id="type" name="type"
                                th:value="${T(de.ndhbr.ynvest.entity.OrderType).Sell}"/>-->
                         <input th:type="hidden" name="type" value="Sell"/>

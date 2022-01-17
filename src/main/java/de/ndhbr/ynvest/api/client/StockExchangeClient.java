@@ -4,6 +4,8 @@ import de.ndhbr.ynvest.entity.OrderType;
 import de.ndhbr.ynvest.entity.StockOrder;
 import de.othr.sw.yetra.dto.OrderDTO;
 import de.othr.sw.yetra.dto.ShareDetailsDTO;
+import de.othr.sw.yetra.dto.TimePeriodDTO;
+import de.othr.sw.yetra.entity.Share;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,20 +30,21 @@ public class StockExchangeClient implements StockExchangeClientIF {
     WebClient webClient;
 
     @Override
-    public List<ShareDetailsDTO> findSharesByKeyword(String query) {
-        ResponseEntity<ShareDetailsDTO[]> response;
-        List<ShareDetailsDTO> result = new ArrayList<>();
+    public List<Share> findSharesByKeyword(String query) {
+        ResponseEntity<Share[]> response;
+        List<Share> result = new ArrayList<>();
 
         try {
             response = webClient
                     .get()
-                    .uri(uriBuilder -> uriBuilder.path("/shares?name=" + query).build())
+                    .uri(uriBuilder -> uriBuilder.path("/shares")
+                            .queryParam("name", query).build())
                     .retrieve()
-                    .toEntity(ShareDetailsDTO[].class)
+                    .toEntity(Share[].class)
                     .block();
 
             if (response != null && response.getStatusCode() == HttpStatus.OK) {
-                ShareDetailsDTO[] responseShare = response.getBody();
+                Share[] responseShare = response.getBody();
 
                 if (responseShare != null) {
                     result = Arrays.asList(responseShare);
@@ -50,6 +53,7 @@ public class StockExchangeClient implements StockExchangeClientIF {
                 throw new ServiceException(stockExchangeNotAvailable);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new ServiceException(stockExchangeNotAvailable);
         }
 
@@ -57,43 +61,48 @@ public class StockExchangeClient implements StockExchangeClientIF {
     }
 
     @Override
-    public List<ShareDetailsDTO> getSharesByIsins(List<String> isins) {
-        ResponseEntity<ShareDetailsDTO[]> response;
-        List<ShareDetailsDTO> result = new ArrayList<>();
+    public List<Share> getSharesByIsins(List<String> isins) {
+        ResponseEntity<Share[]> response;
+        List<Share> result = new ArrayList<>();
 
-        try {
-            response = webClient
-                    .get()
-                    .uri(uriBuilder -> uriBuilder.path("/shares?filter=" + isins).build())
-                    .retrieve()
-                    .toEntity(ShareDetailsDTO[].class)
-                    .block();
+        if (isins.size() > 0) {
+            try {
+                response = webClient
+                        .get()
+                        .uri(uriBuilder -> uriBuilder.path("/shares")
+                                .queryParam("filter", isins).build())
+                        .retrieve()
+                        .toEntity(Share[].class)
+                        .block();
 
-            if (response != null && response.getStatusCode() == HttpStatus.OK) {
-                ShareDetailsDTO[] responseShare = response.getBody();
+                if (response != null && response.getStatusCode() == HttpStatus.OK) {
+                    Share[] responseShare = response.getBody();
 
-                if (responseShare != null) {
-                    result = Arrays.asList(responseShare);
+                    if (responseShare != null) {
+                        result = Arrays.asList(responseShare);
+                    }
+                } else {
+                    throw new ServiceException(stockExchangeNotAvailable);
                 }
-            } else {
+            } catch (Exception e) {
+                e.printStackTrace();
                 throw new ServiceException(stockExchangeNotAvailable);
             }
-        } catch (Exception e) {
-            throw new ServiceException(stockExchangeNotAvailable);
         }
 
         return result;
     }
 
     @Override
-    public ShareDetailsDTO getShareDetails(String isin) {
+    public ShareDetailsDTO getShareDetails(String isin, TimePeriodDTO timePeriod) {
         ResponseEntity<ShareDetailsDTO> response;
         ShareDetailsDTO result = null;
 
         try {
             response = webClient
                     .get()
-                    .uri(uriBuilder -> uriBuilder.path("/shares/" + isin).build())
+                    .uri(uriBuilder -> uriBuilder.path("/shares/" + isin)
+                            .queryParam("timePeriod", timePeriod).build())
                     .retrieve()
                     .toEntity(ShareDetailsDTO.class)
                     .block();

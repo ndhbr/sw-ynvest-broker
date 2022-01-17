@@ -3,14 +3,12 @@
 <body>
 <div th:fragment="portfolio" class="p-3">
     <h1 class="h2">Dein Depot</h1>
-    <hr />
+    <hr/>
 
     <div id="portfolio-actions">
         <small class="text-muted">Portfoliowert</small>
-        <h2 class="portfolio-value">
-            XXX.XXX €
-            <span class="stock-positive subbed">+X.X%</span>
-        </h2>
+        <h2 class="portfolio-value"
+            th:text="${#numbers.formatDecimal(portfolioValue, 1, 'POINT', 2, 'COMMA')} + ' €'"></h2>
         <p class="text-muted">
             Verfügbares Guthaben: <label th:text="${bankAccount?.getRoundedVirtualBalance()}"></label> €
         </p>
@@ -18,7 +16,7 @@
 
     <div id="portfolio-values">
         <h2 class="h3">Wertpapiere</h2>
-        <hr />
+        <hr/>
 
         <div class="empty-list" th:if="${#lists.isEmpty(shares)}">
             <span data-feather="dollar-sign"></span>
@@ -31,19 +29,20 @@
             <tr>
                 <th scope="col">Wertpapier</th>
                 <th scope="col">Kurs</th>
+                <th scope="col">Gesamtwert</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="share : ${shares}">
+            <tr th:each="share,i : ${shares}">
                 <td>
                     <a th:href="@{/portfolio/share/{isin}(isin= ${share.getIsin()})}">
-                        <label th:text="${share.getIsin()}"></label><br/>
+                        <label th:text="${shareDetails?.get(i.index)?.getName() ?: 'n/a'} + ' (' + ${share.getIsin()} + ')'">
+                        </label><br/>
                         <b>x<label th:text="${share.getQuantity()}"></label></b>
                     </a>
                 </td>
-                <td>
-                    XXX,XX<br/>
-                    <span class="stock-negative">-X.X%</span>
+                <td th:text="${shareDetails?.get(i.index)?.getCurrentPrice() ?: 'n/a'} + ' €'"></td>
+                <td th:text="${(shareDetails?.get(i.index)?.getCurrentPrice() ?: 0.0) * share.getQuantity()} + ' €'">
                 </td>
             </tr>
             </tbody>

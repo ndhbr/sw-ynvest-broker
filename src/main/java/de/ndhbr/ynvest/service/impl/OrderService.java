@@ -109,6 +109,8 @@ public class OrderService implements OrderServiceIF {
         double stockPrice = stockExchange.getSharePrice(stockOrder.getIsin());
         if (stockOrder.getUnitPrice() > stockPrice * 1.05 ||
                 stockOrder.getUnitPrice() < stockPrice * 0.95) {
+            System.out.println("StockOrder Price: " + stockOrder.getUnitPrice());
+            System.out.println("Current Price: " + stockPrice);
             throw new ServiceException("Der Auftragspreis hat sich in der Zwischenzeit verändert. Versuche es erneut.");
         }
 

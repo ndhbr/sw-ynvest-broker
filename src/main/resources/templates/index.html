@@ -14,7 +14,7 @@
     <form class="search-form" th:method="get" th:action="@{/search}">
         <div class="input-group">
             <input type="text" class="form-control form-control-dark" placeholder="Suche"
-                   name="query" aria-label="Suche" aria-describedby="basic-addon2">
+                   name="query" aria-label="Suche" min="3">
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="submit">
                     <span data-feather="search"></span>
