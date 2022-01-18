@@ -20,11 +20,15 @@ public class MathUtils {
     // Calculates the percent difference of a collection of markt values
     public static double calculateRoundedDifferenceOfMarktValues(Collection<MarketValueDTO> marketValues) {
         ArrayList<MarketValueDTO> marketValueDTO = new ArrayList<>(marketValues);
-        double difference = marketValueDTO.get(marketValueDTO.size() - 1).getUnitPrice() /
-                marketValueDTO.get(0).getUnitPrice();
-        difference -= 1;
-        difference *= 100;
-        difference = MathUtils.round(difference, 2);
+        double difference = 0.0;
+
+        if (marketValueDTO.size() > 0) {
+            difference = marketValueDTO.get(marketValueDTO.size() - 1).getUnitPrice() /
+                    marketValueDTO.get(0).getUnitPrice();
+            difference -= 1;
+            difference *= 100;
+            difference = MathUtils.round(difference, 2);
+        }
 
         return difference;
     }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with PhotoLine 23.01 (www.pl32.de) -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="500" height="250" viewBox="0 0 500 250" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g transform="matrix(1.33777 0 0 1.33777 -60.352993 -59.304279)">
+    <g transform="matrix(1 0 0 1 45.311096 65.531341)">
+      <text kerning="0" font-family="Baskerville" font-weight="700" font-size="66.67" fill="#ffffff" fill-opacity="0.8">
+        <tspan x="0" y="59.77">W</tspan>
+        <tspan x="59.44" y="59.77">y</tspan>
+        <tspan x="94.86" y="59.77">r</tspan>
+        <tspan x="126.14" y="59.77">t</tspan>
+        <tspan x="150.46" y="59.77">schafts</tspan>
+      </text>
+    </g>
+    <g transform="matrix(1 0 0 1 174.900909 118.927444)">
+      <text kerning="0" font-family="Baskerville" font-weight="700" font-size="66.67" fill="#ffffff" fill-opacity="0.8">
+        <tspan x="0" y="59.77">Zeitung</tspan>
+      </text>
+    </g>
+  </g>
+</svg>

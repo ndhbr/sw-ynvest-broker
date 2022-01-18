@@ -2,10 +2,12 @@ package de.ndhbr.ynvest.web;
 
 import de.ndhbr.ynvest.entity.Address;
 import de.ndhbr.ynvest.entity.Customer;
+import de.ndhbr.ynvest.exception.ServiceUnavailableException;
 import de.ndhbr.ynvest.service.CustomerServiceIF;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -48,15 +50,14 @@ public class CustomerController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String registerAction(@ModelAttribute("customer") Customer customer,
-                                 HttpServletRequest request,
-                                 Locale locale, ModelMap model) {
+                                 HttpServletRequest request, Locale locale, ModelMap model) {
         try {
             customerService.registerCustomer(customer);
 
             model.addAttribute("success", "Erfolgreich registriert! " +
                     "Du kannst dich nun einloggen.");
             model.addAttribute("content", "login");
-        } catch (ServiceException e) {
+        } catch (ServiceUnavailableException | ServiceException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("content", "register");
         }
@@ -75,22 +76,18 @@ public class CustomerController {
     public String verifyAction(@ModelAttribute("address") Address address,
                                HttpServletRequest request,
                                Locale locale, ModelMap model,
-                               Principal user) {
+                               @AuthenticationPrincipal Customer customer) {
         try {
-            Customer customer = (Customer) SecurityContextHolder.getContext()
-                    .getAuthentication().getPrincipal();
-
             customer.setAddress(address);
             customer = customerService.verifyCustomer(customer);
 
             model.addAttribute("customer", customer);
-        } catch (ServiceException e) {
+            model.addAttribute("success", "Du hast dich erfolgreich verifiziert!");
+            model.addAttribute("content", "start");
+        } catch (ServiceException | ServiceUnavailableException e) {
             model.addAttribute("error", e.getMessage());
-            model.addAttribute("content", "register");
+            model.addAttribute("content", "verify");
         }
-
-        model.addAttribute("success", "Du hast dich erfolgreich verifiziert!");
-        model.addAttribute("content", "start");
 
         return "index";
     }

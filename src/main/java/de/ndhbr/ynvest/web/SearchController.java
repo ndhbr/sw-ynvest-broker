@@ -1,6 +1,7 @@
 package de.ndhbr.ynvest.web;
 
 import de.ndhbr.ynvest.api.client.StockExchangeClientIF;
+import de.ndhbr.ynvest.exception.ServiceUnavailableException;
 import de.othr.sw.yetra.dto.ShareDetailsDTO;
 import de.othr.sw.yetra.entity.Share;
 import org.hibernate.service.spi.ServiceException;
@@ -29,7 +30,7 @@ public class SearchController {
         try {
             results = stockExchange.findSharesByKeyword(query);
             model.addAttribute("resultList", results);
-        } catch (ServiceException e) {
+        } catch (ServiceUnavailableException | ServiceException e) {
             model.addAttribute("error", e.getMessage());
         }
 

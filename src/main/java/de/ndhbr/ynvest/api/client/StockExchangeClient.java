@@ -2,6 +2,7 @@ package de.ndhbr.ynvest.api.client;
 
 import de.ndhbr.ynvest.entity.OrderType;
 import de.ndhbr.ynvest.entity.StockOrder;
+import de.ndhbr.ynvest.exception.ServiceUnavailableException;
 import de.othr.sw.yetra.dto.OrderDTO;
 import de.othr.sw.yetra.dto.ShareDetailsDTO;
 import de.othr.sw.yetra.dto.TimePeriodDTO;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class StockExchangeClient implements StockExchangeClientIF {
     WebClient webClient;
 
     @Override
-    public List<Share> findSharesByKeyword(String query) {
+    public List<Share> findSharesByKeyword(String query) throws ServiceUnavailableException, ServiceException {
         ResponseEntity<Share[]> response;
         List<Share> result = new ArrayList<>();
 
@@ -42,18 +44,17 @@ public class StockExchangeClient implements StockExchangeClientIF {
                     .retrieve()
                     .toEntity(Share[].class)
                     .block();
+        } catch (WebClientRequestException e) {
+            throw new ServiceUnavailableException(stockExchangeNotAvailable);
+        }
 
-            if (response != null && response.getStatusCode() == HttpStatus.OK) {
-                Share[] responseShare = response.getBody();
+        if (response != null && response.getStatusCode() == HttpStatus.OK) {
+            Share[] responseShare = response.getBody();
 
-                if (responseShare != null) {
-                    result = Arrays.asList(responseShare);
-                }
-            } else {
-                throw new ServiceException(stockExchangeNotAvailable);
+            if (responseShare != null) {
+                result = Arrays.asList(responseShare);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
             throw new ServiceException(stockExchangeNotAvailable);
         }
 
@@ -61,7 +62,7 @@ public class StockExchangeClient implements StockExchangeClientIF {
     }
 
     @Override
-    public List<Share> getSharesByIsins(List<String> isins) {
+    public List<Share> getSharesByIsins(List<String> isins) throws ServiceUnavailableException, ServiceException {
         ResponseEntity<Share[]> response;
         List<Share> result = new ArrayList<>();
 
@@ -74,18 +75,17 @@ public class StockExchangeClient implements StockExchangeClientIF {
                         .retrieve()
                         .toEntity(Share[].class)
                         .block();
+            } catch (WebClientRequestException e) {
+                throw new ServiceUnavailableException(stockExchangeNotAvailable);
+            }
 
-                if (response != null && response.getStatusCode() == HttpStatus.OK) {
-                    Share[] responseShare = response.getBody();
+            if (response != null && response.getStatusCode() == HttpStatus.OK) {
+                Share[] responseShare = response.getBody();
 
-                    if (responseShare != null) {
-                        result = Arrays.asList(responseShare);
-                    }
-                } else {
-                    throw new ServiceException(stockExchangeNotAvailable);
+                if (responseShare != null) {
+                    result = Arrays.asList(responseShare);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else {
                 throw new ServiceException(stockExchangeNotAvailable);
             }
         }
@@ -94,7 +94,8 @@ public class StockExchangeClient implements StockExchangeClientIF {
     }
 
     @Override
-    public ShareDetailsDTO getShareDetails(String isin, TimePeriodDTO timePeriod) {
+    public ShareDetailsDTO getShareDetails(String isin, TimePeriodDTO timePeriod) throws ServiceUnavailableException,
+            ServiceException {
         ResponseEntity<ShareDetailsDTO> response;
         ShareDetailsDTO result = null;
 
@@ -106,17 +107,17 @@ public class StockExchangeClient implements StockExchangeClientIF {
                     .retrieve()
                     .toEntity(ShareDetailsDTO.class)
                     .block();
+        } catch (WebClientRequestException e) {
+            throw new ServiceUnavailableException(stockExchangeNotAvailable);
+        }
 
-            if (response != null && response.getStatusCode() == HttpStatus.OK) {
-                ShareDetailsDTO responseShare = response.getBody();
+        if (response != null && response.getStatusCode() == HttpStatus.OK) {
+            ShareDetailsDTO responseShare = response.getBody();
 
-                if (responseShare != null) {
-                    result = responseShare;
-                }
-            } else {
-                throw new ServiceException(stockExchangeNotAvailable);
+            if (responseShare != null) {
+                result = responseShare;
             }
-        } catch (Exception e) {
+        } else {
             throw new ServiceException(stockExchangeNotAvailable);
         }
 
@@ -124,28 +125,26 @@ public class StockExchangeClient implements StockExchangeClientIF {
     }
 
     @Override
-    public double getSharePrice(String isin) {
+    public double getSharePrice(String isin) throws ServiceUnavailableException, ServiceException {
         ResponseEntity<ShareDetailsDTO> response;
         double result = 0.0;
 
-        try {
-            response = webClient
-                    .get()
-                    .uri(uriBuilder -> uriBuilder.path("/shares/" + isin).build())
-                    .retrieve()
-                    .toEntity(ShareDetailsDTO.class)
-                    .block();
+        response = webClient
+                .get()
+                .uri(uriBuilder -> uriBuilder.path("/shares/" + isin).build())
+                .retrieve()
+                .toEntity(ShareDetailsDTO.class)
+                .onErrorMap(WebClientRequestException.class,
+                        e -> new ServiceUnavailableException(stockExchangeNotAvailable))
+                .block();
 
-            if (response != null && response.getStatusCode() == HttpStatus.OK) {
-                ShareDetailsDTO share = response.getBody();
+        if (response != null && response.getStatusCode() == HttpStatus.OK) {
+            ShareDetailsDTO share = response.getBody();
 
-                if (share != null) {
-                    result = share.getCurrentPrice();
-                }
-            } else {
-                throw new ServiceException(stockExchangeNotAvailable);
+            if (share != null) {
+                result = share.getCurrentPrice();
             }
-        } catch (Exception e) {
+        } else {
             throw new ServiceException(stockExchangeNotAvailable);
         }
 
@@ -153,7 +152,7 @@ public class StockExchangeClient implements StockExchangeClientIF {
     }
 
     @Override
-    public StockOrder createOrder(StockOrder order) {
+    public StockOrder createOrder(StockOrder order) throws ServiceUnavailableException, ServiceException {
         ResponseEntity<OrderDTO> response;
         OrderDTO remoteOrder = new OrderDTO();
 
@@ -167,26 +166,24 @@ public class StockExchangeClient implements StockExchangeClientIF {
             remoteOrder.setType(de.othr.sw.yetra.entity.OrderType.SELL);
         }
 
-        try {
-            response = webClient
-                    .post()
-                    .uri(uriBuilder -> uriBuilder.path("/orders").build())
-                    .body(Mono.just(remoteOrder), OrderDTO.class)
-                    .retrieve()
-                    .toEntity(OrderDTO.class)
-                    .block();
+        response = webClient
+                .post()
+                .uri(uriBuilder -> uriBuilder.path("/orders").build())
+                .body(Mono.just(remoteOrder), OrderDTO.class)
+                .retrieve()
+                .toEntity(OrderDTO.class)
+                .onErrorMap(WebClientRequestException.class,
+                        e -> new ServiceUnavailableException(stockExchangeNotAvailable))
+                .block();
 
-            if (response != null && response.getStatusCode() == HttpStatus.OK) {
-                OrderDTO responseOrder = response.getBody();
+        if (response != null && response.getStatusCode() == HttpStatus.OK) {
+            OrderDTO responseOrder = response.getBody();
 
-                if (responseOrder != null && responseOrder.getTimestamp() != null &&
-                        responseOrder.getStatus() != null) {
-                    order.mergeWith(responseOrder);
-                }
-            } else {
-                throw new ServiceException(stockExchangeNotAvailable);
+            if (responseOrder != null && responseOrder.getTimestamp() != null &&
+                    responseOrder.getStatus() != null) {
+                order.mergeWith(responseOrder);
             }
-        } catch (Exception e) {
+        } else {
             throw new ServiceException(stockExchangeNotAvailable);
         }
 

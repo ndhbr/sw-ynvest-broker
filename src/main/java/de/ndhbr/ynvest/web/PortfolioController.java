@@ -1,8 +1,8 @@
 package de.ndhbr.ynvest.web;
 
-import de.ndhbr.ynvest.api.client.StockExchangeClient;
 import de.ndhbr.ynvest.api.client.StockExchangeClientIF;
 import de.ndhbr.ynvest.entity.*;
+import de.ndhbr.ynvest.exception.ServiceUnavailableException;
 import de.ndhbr.ynvest.service.CustomerServiceIF;
 import de.ndhbr.ynvest.service.OrderServiceIF;
 import de.ndhbr.ynvest.util.MathUtils;
@@ -58,7 +58,7 @@ public class PortfolioController {
                 }
 
                 model.addAttribute("shareDetails", detailedShares);
-            } catch (ServiceException e) {
+            } catch (ServiceUnavailableException | ServiceException e) {
                 model.addAttribute("error", e.getMessage());
             }
 
@@ -98,7 +98,7 @@ public class PortfolioController {
 
             stockOrder.setUnitPrice(shareDetails.getCurrentPrice());
             model.addAttribute("shareDetails", shareDetails);
-        } catch (ServiceException e) {
+        } catch (ServiceUnavailableException | ServiceException e) {
             model.addAttribute("error", e.getMessage());
         }
         model.addAttribute("difference", difference);

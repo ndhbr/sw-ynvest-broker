@@ -12,10 +12,11 @@
             <div class="col">
                 <small class="text-muted">Aktueller Kurswert</small>
                 <h2 class="portfolio-value">
-                    <label th:text="${shareDetails?.getCurrentPrice() ?: 'n/a'}"></label> €
+                    <label th:text="${#numbers.formatDecimal((shareDetails?.getCurrentPrice() ?: 0.0), 1, 'POINT', 2, 'COMMA')}"></label>
+                    €
 
                     <span class="subbed stock-positive" th:if="${difference} ge 0"
-                        th:text="'+' + ${difference} + '%'"></span>
+                          th:text="'+' + ${difference} + '%'"></span>
                     <span class="subbed stock-negative" th:if="${difference} lt 0"
                           th:text="${difference} + '%'"></span>
                 </h2>
@@ -38,7 +39,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col-lg-6">
                 <h2 class="h3">Performance</h2>
                 <hr/>
                 <div class="btn-group">
@@ -56,15 +57,17 @@
                        th:classappend="${period == year} ? 'active' : ''">Jahr</a>
                 </div>
                 <canvas class="my-4 w-100" id="stock-chart" width="900" height="380"></canvas>
+            </div>
 
-                <div th:unless="${#lists.isEmpty(orders)}">
-                    <h2 class="h3">Offene Aufträge</h2>
-                    <hr/>
+            <div class="col-lg-6">
+                <h2 class="h3">Offene Aufträge</h2>
+                <hr/>
 
+                <div class="table-responsive" th:unless="${#lists.isEmpty(orders)}">
                     <table class="table table-striped table-hover table-dark mt-3">
                         <thead>
                         <tr>
-                            <th scope="col">Auftragsnummer</th>
+                            <th scope="col">Auftragsnr.</th>
                             <th scope="col">Typ</th>
                             <th scope="col">Menge</th>
                             <th scope="col">Stückpreis</th>
@@ -86,6 +89,10 @@
                         </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="empty-list" th:if="${#lists.isEmpty(orders)}">
+                    <span data-feather="shopping-cart"></span>
+                    <p>Keine Aufträge ausstehend</p>
                 </div>
             </div>
         </div>
@@ -170,6 +177,7 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
 
+        const type = /*[[${period.name()}]]*/ "DAY";
         const marketValues = /*[[${shareDetails?.marketValues}]]*/ [];
         console.log(marketValues);
 

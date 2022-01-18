@@ -31,19 +31,6 @@ public class BankAccount extends SingleIdEntity<String> {
         this.iban = iban;
     }
 
-    public void setRandomIbanTmp() {
-        // TODO: REMOVE, this is only before connecting to Bank Amann
-        Random rand = new Random();
-        StringBuilder card = new StringBuilder("DE");
-        for (int i = 0; i < 14; i++)
-        {
-            int n = rand.nextInt(10);
-            card.append(Integer.toString(n));
-        }
-
-        this.setIban(card.toString());
-    }
-
     public String getUsername() {
         return username;
     }

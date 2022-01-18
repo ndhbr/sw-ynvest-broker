@@ -2,6 +2,7 @@ package de.ndhbr.ynvest.service.impl;
 
 import de.ndhbr.ynvest.api.client.StockExchangeClientIF;
 import de.ndhbr.ynvest.entity.*;
+import de.ndhbr.ynvest.exception.ServiceUnavailableException;
 import de.ndhbr.ynvest.repository.OrderRepo;
 import de.ndhbr.ynvest.service.OrderServiceIF;
 import org.hibernate.service.spi.ServiceException;
@@ -91,7 +92,8 @@ public class OrderService implements OrderServiceIF {
     }
 
     @Override
-    public StockOrder createOrder(StockOrder stockOrder, Customer customer) {
+    public StockOrder createOrder(StockOrder stockOrder, Customer customer) throws ServiceUnavailableException,
+            ServiceException {
         Portfolio portfolio = customer.getPortfolio();
 
         // Check for open sell orders

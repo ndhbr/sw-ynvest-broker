@@ -33,7 +33,7 @@ public class Customer extends SingleIdEntity<String> implements UserDetails {
     @OneToOne(orphanRemoval = true)
     private Portfolio portfolio;
     // TODO: Check if eager is necessary
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "customer")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "customer")
     @OrderBy("placedOn DESC")
     private List<StockOrder> stockOrders;
 

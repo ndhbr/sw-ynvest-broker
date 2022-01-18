@@ -1,13 +1,13 @@
 package de.ndhbr.ynvest.web;
 
 import de.ndhbr.ynvest.entity.*;
+import de.ndhbr.ynvest.exception.ServiceUnavailableException;
 import de.ndhbr.ynvest.service.BankAccountServiceIF;
 import de.ndhbr.ynvest.service.CustomerServiceIF;
 import de.ndhbr.ynvest.service.OrderServiceIF;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +61,7 @@ public class OrderController {
             customerService.addOrder(addedOrder, customer);
 
             model.addAttribute("success", "Der Auftrag wurde erfolgreich erstellt!");
-        } catch (ServiceException e) {
+        } catch (ServiceUnavailableException | ServiceException e) {
             model.addAttribute("error", e.getMessage());
         }
 

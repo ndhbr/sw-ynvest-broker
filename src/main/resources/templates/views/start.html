@@ -1,43 +1,134 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
-<div th:fragment="start" class="p-3">
-    <div class="small-dialog" sec:authorize="isAuthenticated()">
-        <h1 class="h2">Willkommen <label th:text="${customer?.getName()}"></label>,</h1>
+<div th:fragment="start" class="py-3">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                    <img th:src="@{/img/ynvest_header.jpg}" class="front-page-header" alt="ynvest Header"/>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-lg-4 px-3">
+                <img th:src="@{/img/personal_investments.svg}" class="front-page px-5 pb-3" alt="Personal Investments"/>
+            </div>
+            <div class="col-lg-8 px-3">
+                <div sec:authorize="isAuthenticated()">
+                    <h1 class="h2">Willkommen <label th:text="${customer?.getName()}"></label>,</h1>
 
-        <div sec:authorize="hasRole('VERIFIED')">
-            <p>
-                Heute ist ein guter Tag Geld zu investieren.
-                Schau doch in deinem Depot vorbei!
-            </p>
-            <a th:href="@{/portfolio}" type="button" class="btn btn-primary btn-lg btn-block">Zum Depot</a>
-        </div>
-        <div sec:authorize="hasRole('NOT_VERIFIED')">
-            <p>
-                Dein Konto ist noch nicht verifiziert. Vervollständige
-                jetzt deine Daten, um mit dem Wertpapierhandel loszulegen!
-            </p>
-            <a th:href="@{/verify}" type="button" class="btn btn-primary btn-lg btn-block">Verifizieren</a>
-        </div>
-        <div sec:authorize="hasRole('API_USER')">
-            <p>
-                Dieses Konto ist nur für die Nutzung der API bestimmt. Du kannst
-                keinen Wertpapierhandel betreiben.
-            </p>
-            <a th:href="@{/logout}" type="button" class="btn btn-primary btn-lg btn-block">Ausloggen</a>
-        </div>
-    </div>
+                    <div sec:authorize="hasRole('VERIFIED')">
+                        <p>
+                            Heute ist ein guter Tag Geld zu investieren.
+                            Schau doch in deinem Depot vorbei!
+                        </p>
+                        <a th:href="@{/portfolio}" type="button" class="btn btn-primary btn-lg btn-block">Zum Depot</a>
+                    </div>
+                    <div sec:authorize="hasRole('NOT_VERIFIED')">
+                        <p>
+                            Dein Konto ist noch nicht verifiziert. Vervollständige
+                            jetzt deine Daten, um mit dem Wertpapierhandel loszulegen!
+                        </p>
+                        <a th:href="@{/verify}" type="button" class="btn btn-primary btn-lg btn-block">Verifizieren</a>
+                    </div>
+                    <div sec:authorize="hasRole('API_USER')">
+                        <p>
+                            Dieses Konto ist nur für die Nutzung der API bestimmt. Du kannst
+                            keinen Wertpapierhandel betreiben.
+                        </p>
+                        <a th:href="@{/logout}" type="button" class="btn btn-primary btn-lg btn-block">Ausloggen</a>
+                    </div>
+                </div>
 
-    <div class="small-dialog" sec:authorize="!isAuthenticated()">
-        <h1 class="h2">Der einzige Broker, den du brauchst</h1>
-        <p>
-            Mit ynvest brauchst du dich nie wieder um teure Ordergebühren kümmern. Mit nur festen 0,99 € pro Trade
-            gehört ynvest zu den günstigsten Aktien-Brokern der Welt!
-        </p>
-        <p class="mb-3">
-            Erstell dir jetzt ein gratis Depot.
-        </p>
-        <a th:href="@{/register}" type="button" class="btn btn-primary btn-lg btn-block">Registrieren</a>
+                <div sec:authorize="!isAuthenticated()">
+                    <h1 class="h2">Der einzige Broker, den du brauchst</h1>
+                    <p>
+                        Mit ynvest brauchst du dich nie wieder um hohe Ordergebühren kümmern. Mit einer festen
+                        Auftragsgebühr 0,99 € von gehört ynvest zu den günstigsten Aktien-Brokern der Welt!
+                    </p>
+                    <p class="mb-3">
+                        Erstell' dir jetzt ein gratis Depot und sage noch heute der Inflation den Kampf an!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div sec:authorize="!isAuthenticated()">
+            <h2 class="h3 text-center mb-3">
+                Unsere Pakete
+            </h2>
+            <div class="row text-center mb-5">
+                <div class="col-lg-4 offset-lg-2">
+                    <div class="card mb-4 rounded-3 shadow-sm">
+                        <div class="card-header py-3">
+                            <h4 class="my-0 fw-normal">Privatkunden</h4>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="h1 card-title pricing-card-title">0 €<small
+                                    class="text-muted fw-light">/mo</small></h3>
+                            <ul class="list-unstyled mt-3 mb-4">
+                                <li>0,99 € pro Auftrag</li>
+                                <li>Zugriff zu allen DAX-Aktien</li>
+                                <li>E-Mail Support</li>
+                                <li>FAQ Zugriff</li>
+                            </ul>
+                            <a th:href="@{/register}" type="button" class="w-100 btn btn-lg btn-primary">
+                                Jetzt registrieren
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card mb-4 rounded-3 shadow-sm">
+                        <div class="card-header py-3">
+                            <h4 class="my-0 fw-normal">Reseller</h4>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="h1 card-title pricing-card-title text-muted fw-light">Auf Anfrage</small></h3>
+                            <ul class="list-unstyled mt-3 mb-4">
+                                <li>Monatliche Rechnungen</li>
+                                <li>Zugriff zu allen DAX-Aktien</li>
+                                <li>24/7 Hotline</li>
+                                <li>24/7 Technischer Support</li>
+                            </ul>
+                            <a th:href="@{/support}" type="button" class="w-100 btn btn-lg btn-outline-primary">
+                                Anfragen
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h2 class="h3 text-center mb-3">
+                Bekannt aus
+            </h2>
+            <div class="row justify-content-center">
+                <div class="col-sm-6 col-lg-3">
+                    <a href="#">
+                        <img th:src="@{/img/featured_in_wyrtschafts_zeitung.svg}" class="featured-in px-5 pb-3"
+                             alt="Wyrtschafts Zeitung"/>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <a href="#">
+                        <img th:src="@{/img/featured_in_inflation.svg}" class="featured-in px-5 pb-3"
+                             alt="Ynflation? Nein danke!"/>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <a href="#">
+                        <img th:src="@{/img/featured_in_yetra.svg}" class="featured-in px-5 pb-3"
+                             alt="YETRA Blog"/>
+                    </a>
+                </div>
+                <div class="col-sm-6 col-lg-3">
+                    <a href="#">
+                        <img th:src="@{/img/featured_in_finanztip.svg}" class="featured-in px-5 pb-3"
+                             alt="FynanTip"/>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

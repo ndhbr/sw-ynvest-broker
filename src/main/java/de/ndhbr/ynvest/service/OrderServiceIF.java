@@ -2,6 +2,7 @@ package de.ndhbr.ynvest.service;
 
 import de.ndhbr.ynvest.entity.Customer;
 import de.ndhbr.ynvest.entity.StockOrder;
+import de.ndhbr.ynvest.exception.ServiceUnavailableException;
 import org.hibernate.service.spi.ServiceException;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface OrderServiceIF {
     Optional<StockOrder> findOrderById(Long orderId);
     StockOrder saveOrder(StockOrder stockOrder);
     StockOrder completeOrderById(Long orderId) throws ServiceException;
-    StockOrder createOrder(StockOrder stockOrder, Customer customer);
+    StockOrder createOrder(StockOrder stockOrder, Customer customer) throws ServiceUnavailableException;
     List<StockOrder> getOpenOrdersByIsin(Customer customer, String isin);
     double getSumOfOpenOrders(Customer customer);
     double getQuantityOfAllOpenSellOrders(Customer customer);

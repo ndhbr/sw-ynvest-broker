@@ -1,6 +1,8 @@
 package de.ndhbr.ynvest.service.impl;
 
+import de.ndhbr.ynvest.api.client.BankClientIF;
 import de.ndhbr.ynvest.entity.*;
+import de.ndhbr.ynvest.exception.ServiceUnavailableException;
 import de.ndhbr.ynvest.repository.CustomerRepo;
 import de.ndhbr.ynvest.service.BankAccountServiceIF;
 import de.ndhbr.ynvest.service.CustomerServiceIF;
@@ -21,6 +23,9 @@ import java.util.Optional;
 @Service
 @Scope("singleton")
 public class CustomerService implements CustomerServiceIF {
+
+    @Autowired
+    BankClientIF bankClient;
 
     @Autowired
     private CustomerRepo customerRepo;
@@ -51,17 +56,7 @@ public class CustomerService implements CustomerServiceIF {
             if (customer.getCustomerType() != CustomerType.ROLE_API_USER) {
                 // Create portfolio
                 Portfolio portfolio = portfolioService.savePortfolio(new Portfolio());
-
-                // Create bank account
-                // TODO: SCHNITTSTELLE ZU SINA BANK!
-                BankAccount bankAccount = new BankAccount();
-                bankAccount.setRandomIbanTmp(); // TODO: Replace with account creation in Amann Bank
-                bankAccount.setBalance(10000);
-                bankAccount.setVirtualBalance(10000);
-                bankAccountService.saveBankAccount(bankAccount);
-
                 customer.setPortfolio(portfolio);
-                customer.setBankAccount(bankAccount);
             }
 
             customer.setPassword(bCryptPasswordEncoder.encode(customer.getPassword()));
@@ -74,8 +69,14 @@ public class CustomerService implements CustomerServiceIF {
     }
 
     @Override
-    public Customer verifyCustomer(Customer customer) {
+    public Customer verifyCustomer(Customer customer) throws ServiceUnavailableException {
+        // Create bank account
+        BankAccount bankAccount = bankClient.createBankAccount(new BankAccount(), customer);
+        bankAccountService.saveBankAccount(bankAccount);
+        customer.setBankAccount(bankAccount);
+
         customer.setCustomerType(CustomerType.ROLE_VERIFIED);
+
         return customerRepo.save(customer);
     }
 
