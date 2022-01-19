@@ -11,6 +11,7 @@ import eBank.DTO.UeberweisungDTO;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import reactor.core.publisher.Mono;
 import java.util.logging.Logger;
 
 @Component
+@Scope("singleton")
 public class BankClient implements BankClientIF {
 
     private final String bankNotAvailable = "Bank eBank nicht " +
@@ -43,11 +45,6 @@ public class BankClient implements BankClientIF {
         ueberweisungDTO.setIbanEmpfaenger(ibanReceiver);
         ueberweisungDTO.setBetrag(amount);
         ueberweisungDTO.setKommentar(purposeOfUse);
-
-        System.out.println(ueberweisungDTO.getIbanSender());
-        System.out.println(ueberweisungDTO.getIbanEmpfaenger());
-        System.out.println(ueberweisungDTO.getBetrag());
-        System.out.println(ueberweisungDTO.getKommentar());
 
         try {
             response = webClient

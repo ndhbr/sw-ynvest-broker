@@ -3,7 +3,8 @@ package de.ndhbr.ynvest.repository;
 import de.ndhbr.ynvest.entity.Customer;
 import de.ndhbr.ynvest.entity.StockOrder;
 import de.ndhbr.ynvest.util.Constants;
-import org.apache.catalina.util.CustomObjectInputStream;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +26,6 @@ public interface OrderRepo extends PagingAndSortingRepository<StockOrder, Long> 
     @Query("FROM StockOrder WHERE customer = :#{#customer} AND isin = :#{#isin}" +
             " AND status = 'Open' ORDER BY placedOn DESC")
     List<StockOrder> getOpenOrdersByIsin(@Param("customer") Customer customer, String isin);
+
+    Page<StockOrder> findStockOrderByCustomer(Customer customer, Pageable pageable);
 }

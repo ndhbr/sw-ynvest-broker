@@ -11,6 +11,7 @@ import de.othr.sw.yetra.entity.Share;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
+@Scope("singleton")
 public class StockExchangeClient implements StockExchangeClientIF {
 
     private final String stockExchangeNotAvailable = "Börse yetra nicht " +

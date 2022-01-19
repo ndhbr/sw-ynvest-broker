@@ -2,7 +2,6 @@ package de.ndhbr.ynvest.web;
 
 import de.ndhbr.ynvest.api.client.StockExchangeClientIF;
 import de.ndhbr.ynvest.exception.ServiceUnavailableException;
-import de.othr.sw.yetra.dto.ShareDetailsDTO;
 import de.othr.sw.yetra.entity.Share;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Locale;
 
 @Controller
 @Scope("singleton")
@@ -23,7 +21,7 @@ public class SearchController {
     StockExchangeClientIF stockExchange;
 
     @RequestMapping("/search")
-    public String search(@RequestParam String query, Locale locale, ModelMap model) {
+    public String search(@RequestParam String query, ModelMap model) {
         String searchQuery = (query != null) ? query : "";
         List<Share> results;
 

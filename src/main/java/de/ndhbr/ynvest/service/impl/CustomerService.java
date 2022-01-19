@@ -70,6 +70,7 @@ public class CustomerService implements CustomerServiceIF {
     }
 
     @Override
+    @Transactional
     public Customer verifyCustomer(Customer customer) throws ServiceUnavailableException {
         // Create bank account
         BankAccount bankAccount = new BankAccount();

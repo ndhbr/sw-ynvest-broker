@@ -12,17 +12,17 @@
     <form method="post" th:action="@{/verify}" th:object="${address}">
         <div class="form-input-group">
             <input type="text" th:field="*{street}" class="form-control form-control-dark" id="street"
-                   placeholder="Straße">
+                   placeholder="Straße" required>
             <input type="text" th:field="*{houseNumber}" class="form-control form-control-dark" id="house-number"
-                   placeholder="Hausnummer">
+                   placeholder="Hausnummer" required>
             <input type="text" th:field="*{addressAddition}" class="form-control form-control-dark"
                    id="additional-address"
                    placeholder="Adresszusatz">
             <input type="text" th:field="*{city}" class="form-control form-control-dark" id="city"
-                   placeholder="Stadt">
+                   placeholder="Stadt" required>
             <input type="text" th:field="*{postal}" class="form-control form-control-dark" id="postal"
-                   placeholder="Postleitzahl">
-            <select th:field="*{country}" class="form-control form-control-dark" id="country">
+                   placeholder="Postleitzahl" required>
+            <select th:field="*{country}" class="form-control form-control-dark" id="country" required>
                 <option value="Afganistan">Afghanistan</option>
                 <option value="Albania">Albania</option>
                 <option value="Algeria">Algeria</option>

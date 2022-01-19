@@ -12,6 +12,7 @@ import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +37,8 @@ public class PortfolioController {
     StockExchangeClientIF stockExchange;
 
     @RequestMapping
-    public String portfolio(Locale locale, ModelMap model, Principal user) {
+    @Transactional
+    public String portfolio(ModelMap model, Principal user) {
         Customer customer = customerService.getCustomerByEmail(user.getName());
         Portfolio portfolio = customer.getPortfolio();
         BankAccount bankAccount = customer.getBankAccount();
@@ -75,8 +77,9 @@ public class PortfolioController {
     }
 
     @RequestMapping("/share/{isin}")
+    @Transactional
     public String share(@PathVariable String isin, @PathParam("period") TimePeriodDTO period,
-                        Locale locale, ModelMap model, Principal user) {
+                        ModelMap model, Principal user) {
         Customer customer = customerService.getCustomerByEmail(user.getName());
         List<StockOrder> orders = orderService.getOpenOrdersByIsin(customer, isin);
         Portfolio portfolio = customer.getPortfolio();

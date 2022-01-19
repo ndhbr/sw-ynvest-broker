@@ -1,8 +1,9 @@
-package de.ndhbr.ynvest.api.client;
+package de.ndhbr.ynvest.configuration;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -11,6 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientFactory {
 
     @Bean
+    @Scope("singleton")
     @Qualifier("stockExchange")
     public WebClient getStockExchangeWebClient() {
         return generateWebClient()
@@ -20,6 +22,7 @@ public class WebClientFactory {
     }
 
     @Bean
+    @Scope("singleton")
     @Qualifier("bank")
     public WebClient getBankWebClient() {
         return generateWebClient()

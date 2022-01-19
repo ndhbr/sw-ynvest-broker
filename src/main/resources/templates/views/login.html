@@ -14,8 +14,10 @@
             </div>
 
             <div class="form-input-group">
-                <input type="email" th:field="*{email}" class="form-control form-control-dark" id="email" placeholder="E-Mail Adresse">
-                <input type="password" th:field="*{password}" class="form-control form-control-dark" id="password" placeholder="Passwort">
+                <input type="email" th:field="*{email}" class="form-control form-control-dark"
+                       id="email" placeholder="E-Mail Adresse" required>
+                <input type="password" th:field="*{password}" class="form-control form-control-dark"
+                       id="password" placeholder="Passwort" minlength="3" required>
             </div>
 
             <button class="w-100 btn btn-lg btn-primary" type="submit">Einloggen</button>

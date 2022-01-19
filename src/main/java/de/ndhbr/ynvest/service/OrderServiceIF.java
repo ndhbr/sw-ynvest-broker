@@ -4,12 +4,15 @@ import de.ndhbr.ynvest.entity.Customer;
 import de.ndhbr.ynvest.entity.StockOrder;
 import de.ndhbr.ynvest.exception.ServiceUnavailableException;
 import org.hibernate.service.spi.ServiceException;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface OrderServiceIF {
     Optional<StockOrder> findOrderById(Long orderId);
+
+    Page<StockOrder> getOrders(Customer customer, int page);
 
     StockOrder saveOrder(StockOrder stockOrder);
 
@@ -22,6 +25,4 @@ public interface OrderServiceIF {
     double getSumOfOpenOrders(Customer customer);
 
     double getQuantityOfAllOpenSellOrders(Customer customer);
-
-    Iterable<StockOrder> getAllOrders();
 }

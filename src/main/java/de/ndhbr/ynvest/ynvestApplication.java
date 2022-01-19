@@ -22,12 +22,13 @@ public class ynvestApplication implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        // Add API Access Account for eBank
         try {
             customerService.getCustomerByEmail("admin@amann-bank.com");
         } catch (ServiceException e) {
             Customer bankUser = new Customer();
             bankUser.setEmail("admin@amann-bank.com");
-            bankUser.setName("Amann Bank");
+            bankUser.setName("eBank Bank");
             bankUser.setPassword("]D(9$9}_fW2Shk(}");
             bankUser.setCustomerType(CustomerType.ROLE_API_USER);
             customerService.registerCustomer(bankUser);

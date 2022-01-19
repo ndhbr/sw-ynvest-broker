@@ -1,8 +1,6 @@
 package de.ndhbr.ynvest.api;
 
-import de.ndhbr.ynvest.api.client.BankClientIF;
 import de.ndhbr.ynvest.entity.BankAccount;
-import de.ndhbr.ynvest.entity.StockOrder;
 import de.ndhbr.ynvest.service.BankAccountServiceIF;
 import de.ndhbr.ynvest.service.OrderServiceIF;
 import eBank.DTO.KontoDTO;

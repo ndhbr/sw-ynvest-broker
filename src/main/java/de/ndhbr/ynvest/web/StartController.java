@@ -20,7 +20,7 @@ public class StartController {
     CustomerServiceIF customerService;
 
     @RequestMapping("/")
-    public String root(Locale locale, ModelMap model, Principal user) {
+    public String root(ModelMap model, Principal user) {
         if (user != null) {
             String email = user.getName();
 

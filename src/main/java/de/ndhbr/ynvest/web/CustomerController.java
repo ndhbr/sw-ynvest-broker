@@ -9,17 +9,11 @@ import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
-import java.security.Principal;
-import java.util.Locale;
 
 @Controller
 @Scope("singleton")
@@ -29,7 +23,7 @@ public class CustomerController {
     CustomerServiceIF customerService;
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(Locale locale, ModelMap model) {
+    public String login(ModelMap model) {
         model.addAttribute("customer", new Customer());
         model.addAttribute("content", "login");
         return "index";
@@ -43,7 +37,7 @@ public class CustomerController {
     }
 
     @RequestMapping("/register")
-    public String register(Locale locale, ModelMap model) {
+    public String register(ModelMap model) {
         model.addAttribute("customer", new Customer());
         model.addAttribute("content", "register");
         return "index";
@@ -51,7 +45,7 @@ public class CustomerController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String registerAction(@ModelAttribute("customer") Customer customer,
-                                 HttpServletRequest request, Locale locale, ModelMap model) {
+                                 ModelMap model) {
         try {
             customerService.registerCustomer(customer);
 
@@ -67,7 +61,7 @@ public class CustomerController {
     }
 
     @RequestMapping("/bank-account")
-    public String bankAccount(Locale locale, ModelMap model,
+    public String bankAccount(ModelMap model,
                               @AuthenticationPrincipal Customer customer) {
         Customer foundCustomer = customerService.getCustomerByEmail(customer.getEmail());
         BankAccount bankAccount = foundCustomer.getBankAccount();
@@ -78,7 +72,7 @@ public class CustomerController {
     }
 
     @RequestMapping("/verify")
-    public String verify(Locale locale, ModelMap model) {
+    public String verify(ModelMap model) {
         model.addAttribute("address", new Address());
         model.addAttribute("content", "verify");
         return "index";
@@ -86,8 +80,7 @@ public class CustomerController {
 
     @RequestMapping(value = "/verify", method = RequestMethod.POST)
     public String verifyAction(@ModelAttribute("address") Address address,
-                               HttpServletRequest request,
-                               Locale locale, ModelMap model,
+                               ModelMap model,
                                @AuthenticationPrincipal Customer customer) {
         try {
             customer.setAddress(address);

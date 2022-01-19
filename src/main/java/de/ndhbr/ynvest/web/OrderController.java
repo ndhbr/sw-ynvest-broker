@@ -8,7 +8,8 @@ import de.ndhbr.ynvest.service.OrderServiceIF;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
@@ -16,8 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.security.Principal;
-import java.util.Locale;
+import javax.websocket.server.PathParam;
 
 @Controller
 @Scope("singleton")
@@ -33,27 +33,25 @@ public class OrderController {
     BankAccountServiceIF bankAccountService;
 
     @RequestMapping("/orders")
-    public String orders(Locale locale, ModelMap model) {
-        String userId = SecurityContextHolder.getContext()
-                .getAuthentication().getName();
-        Customer customer = customerService.getCustomerByEmail(userId);
+    public String orders(ModelMap model,
+                         @AuthenticationPrincipal Customer customer,
+                         @PathParam("page") Integer page) {
+        handleOrderList(model, customer, page);
 
-        model.addAttribute("orders", customer.getOrders());
         model.addAttribute("stockOrder", new StockOrder());
         model.addAttribute("content", "orders");
         return "index";
     }
 
     @RequestMapping(value = "/orders", method = RequestMethod.POST)
+    @Transactional
     public String orderAction(@ModelAttribute("stockOrder") StockOrder stockOrder,
-                              Locale locale, ModelMap model, Principal user) {
-        String userId = SecurityContextHolder.getContext()
-                .getAuthentication().getName();
-        Customer customer = null;
-
+                              ModelMap model,
+                              @AuthenticationPrincipal Customer customer,
+                              @PathParam("page") Integer page) {
         try {
             // Customer
-            customer = customerService.getCustomerByEmail(userId);
+            customer = customerService.getCustomerByEmail(customer.getEmail());
 
             // Create order
             StockOrder addedOrder = orderService.createOrder(stockOrder, customer);
@@ -64,10 +62,22 @@ public class OrderController {
             model.addAttribute("error", e.getMessage());
         }
 
-        if (customer != null) {
-            model.addAttribute("orders", customer.getOrders());
-        }
+        handleOrderList(model, customer, page);
         model.addAttribute("content", "orders");
         return "index";
+    }
+
+    private void handleOrderList(ModelMap model,
+                                 @AuthenticationPrincipal Customer customer,
+                                 @PathParam("page") Integer page) {
+        if (page == null) {
+            page = 1;
+        }
+
+        Page<StockOrder> orderList = orderService.getOrders(customer, page - 1);
+
+        model.addAttribute("totalPages", orderList.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("orders", orderList.toList());
     }
 }

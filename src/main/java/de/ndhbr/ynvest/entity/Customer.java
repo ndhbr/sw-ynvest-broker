@@ -106,7 +106,7 @@ public class Customer extends SingleIdEntity<String> implements UserDetails {
 
     public void addOrder(StockOrder stockOrder) {
         if (this.stockOrders == null) {
-            this.stockOrders = new ArrayList<StockOrder>();
+            this.stockOrders = new ArrayList<>();
         }
         this.stockOrders.add(stockOrder);
     }
@@ -118,12 +118,7 @@ public class Customer extends SingleIdEntity<String> implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return Customer.this.customerType.name();
-            }
-        });
+        return List.of((GrantedAuthority) () -> Customer.this.customerType.name());
     }
 
     @Override

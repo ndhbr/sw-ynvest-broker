@@ -10,6 +10,7 @@ import de.ndhbr.ynvest.util.Constants;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,13 @@ public class OrderService implements OrderServiceIF {
     @Override
     public Optional<StockOrder> findOrderById(Long orderId) {
         return orderRepo.findById(orderId);
+    }
+
+    @Override
+    public Page<StockOrder> getOrders(Customer customer, int page) {
+        return orderRepo.findStockOrderByCustomer(customer, PageRequest.of(
+                page, 5, Sort.by("placedOn").descending()
+        ));
     }
 
     @Override
@@ -103,7 +111,6 @@ public class OrderService implements OrderServiceIF {
 
             portfolioService.savePortfolio(portfolio);
         } else {
-            // TODO: Not found exception
             throw new ServiceException("Es wurde kein Auftrag mit der ID " + orderId + " gefunden");
         }
     }
@@ -152,16 +159,5 @@ public class OrderService implements OrderServiceIF {
     @Override
     public double getQuantityOfAllOpenSellOrders(Customer customer) {
         return orderRepo.getQuantityOfAllOpenSellOrdersByCustomer(customer);
-    }
-
-    @Override
-    public Iterable<StockOrder> getAllOrders() {
-        return orderRepo.findAll();
-    }
-
-    public Iterable<StockOrder> getOrdersByParent() {
-        return orderRepo.findAll(
-                PageRequest.of(0, 6, Sort.by("placedOn").descending())
-        );
     }
 }

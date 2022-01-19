@@ -3,7 +3,7 @@
 <body>
 <div th:fragment="orders" class="p-3">
     <h1 class="h2">Aufträge</h1>
-    <hr />
+    <hr/>
 
     <div class="empty-list" th:if="${orders == null || #lists.isEmpty(orders)}">
         <span data-feather="shopping-cart"></span>
@@ -34,13 +34,35 @@
             </th>
             <td><label th:text="${order.getType()}"></label></td>
             <td>x<label th:text="${order.getQuantity()}"></label></td>
-            <td><label th:text="${order.getUnitPrice()}"></label> €</td>
+            <td><label th:text="${#numbers.formatDecimal((order.getUnitPrice() ?: 0.0), 1, 'POINT', 2, 'COMMA')}"></label> €</td>
             <td><label th:text="${order.getStatus()}"></label></td>
-            <td><label th:text="${order.getRoundedTotalPrice()}"></label> €</td>
+            <td><label th:text="${#numbers.formatDecimal((order.getRoundedTotalPrice() ?: 0.0), 1, 'POINT', 2, 'COMMA')}"></label> €</td>
             <td><label th:text="${order.getPlacedOnHumanReadable()}"></label></td>
         </tr>
         </tbody>
     </table>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item bg-dark" th:if="${currentPage > 1}">
+                <a class="page-link" th:href="'?page=' + ${currentPage - 1}">
+                    Vorherige
+                </a>
+            </li>
+            <li th:each="i: ${#numbers.sequence(1, totalPages)}"
+                th:classappend="${currentPage == i} ? 'active' : ''"
+                class="page-item bg-dark">
+                <a class="page-link" th:href="'?page=' + ${i}">
+                    <label th:text="${i}"></label>
+                </a>
+            </li>
+            <li class="page-item bg-dark" th:if="${currentPage < totalPages}">
+                <a class="page-link" th:href="'?page=' + ${currentPage + 1}">
+                    Nächste
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 </body>
 </html>

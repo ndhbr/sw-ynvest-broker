@@ -6,12 +6,11 @@ import de.ndhbr.ynvest.service.OrderServiceIF;
 import de.ndhbr.ynvest.util.Constants;
 import de.othr.sw.yetra.dto.OrderDTO;
 import org.hibernate.service.spi.ServiceException;
-import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -25,6 +24,7 @@ public class ReceiverService {
     Logger logger;
 
     @JmsListener(destination = Constants.ORDER_QUEUE)
+    @Transactional
     public void receiveMessage(OrderDTO orderDTO) {
         StockOrder order;
 
@@ -35,13 +35,13 @@ public class ReceiverService {
                 order = optionalOrder.get();
                 order.mergeWith(orderDTO);
 
+                orderService.saveOrder(order);
+
                 try {
                     orderService.completeOrderById(order.getOrderId());
                 } catch (ServiceUnavailableException | ServiceException e) {
                     logger.warning(e.getMessage());
                 }
-
-                orderService.saveOrder(order);
             }
         }
     }

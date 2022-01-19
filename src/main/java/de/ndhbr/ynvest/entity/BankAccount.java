@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
-import java.util.Random;
 
 @Entity
 public class BankAccount extends SingleIdEntity<String> {

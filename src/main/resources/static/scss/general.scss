@@ -24,6 +24,16 @@ $modal-content-border-color: rgba($black, .2);
 $modal-header-border-color: $modal-content-border-color;
 $modal-footer-border-color: $modal-content-border-color;
 
+/* Pagination */
+$pagination-color: $white;
+$pagination-hover-color: $white;
+$pagination-focus-color: $white;
+$pagination-bg: $greyOnDark;
+$pagination-focus-bg: $lGreyOnDark;
+$pagination-hover-bg: $llGreyOnDark;
+$pagination-border-color: rgba($black, .2);
+$pagination-hover-border-color: $pagination-border-color;
+
 @import "node_modules/bootstrap/scss/bootstrap.scss";
 @import "portfolio";
 @import "signin";
