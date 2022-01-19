@@ -24,7 +24,6 @@ public class ReceiverService {
     Logger logger;
 
     @JmsListener(destination = Constants.ORDER_QUEUE)
-    @Transactional
     public void receiveMessage(OrderDTO orderDTO) {
         StockOrder order;
 

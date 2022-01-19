@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
@@ -46,6 +47,10 @@ public class ApiController {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             result = new ApiResponse(ApiResult.Error,
                     e.getMessage());
+        } catch (EntityNotFoundException e) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            result = new ApiResponse(ApiResult.Error,
+                    "Kein Konto mit der IBAN " + iban + " gefunden.");
         }
 
         return result.toJson();

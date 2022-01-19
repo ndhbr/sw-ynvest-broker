@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service
 @Scope("singleton")
 public class BankAccountService implements BankAccountServiceIF {
@@ -16,7 +18,7 @@ public class BankAccountService implements BankAccountServiceIF {
     BankAccountRepo bankAccountRepo;
 
     @Override
-    public BankAccount getBankAccountByIban(String iban) {
+    public BankAccount getBankAccountByIban(String iban) throws EntityNotFoundException {
         return bankAccountRepo.getById(iban);
     }
 
