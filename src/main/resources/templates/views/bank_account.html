@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<div th:fragment="bank_account" class="p-3">
+    <h1 class="h2">Bankkonto</h1>
+    <hr/>
+
+    <div class="row">
+        <div class="col">
+            <p>
+                Zu deinem Depot wurde ein Bankkonto bei der
+                <a href="http://im-codd.oth-regensburg.de:8937" target="_blank">eBank</a>
+                erstellt. Dieses Konto dient dazu Kauf- und Verkaufsaufträge zu tätigen.
+                Überweise Geld auf das folgende Konto, um es für Aktienkäufe nutzen zu
+                können.
+            </p>
+
+            <a href="http://im-codd.oth-regensburg.de:8937" target="_blank"
+               type="button" class="btn btn-primary btn-lg btn-block">
+                <span data-feather="external-link"></span>
+                Zum Bank-Login
+            </a>
+        </div>
+        <div class="col">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover table-dark">
+                    <tbody>
+                    <tr>
+                        <th scope="row">IBAN</th>
+                        <td><label th:text="${bankAccount?.getIban()}"></label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Kontostand</th>
+                        <td><label
+                                th:text="${#numbers.formatDecimal((bankAccount?.getBalance() ?: 0.0), 1, 'POINT', 2, 'COMMA')} + ' €'"></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Kontostand (m. offenen Aufträgen)</th>
+                        <td><label
+                                th:text="${#numbers.formatDecimal((bankAccount?.getVirtualBalance() ?: 0.0), 1, 'POINT', 2, 'COMMA')} + ' €'"></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">E-Mail Adresse</th>
+                        <td><label th:text="${bankAccount?.getUsername()}"></label></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Passwort</th>
+                        <input id="bank-password" type="hidden" th:value="${bankAccount?.getPassword()}"/>
+                        <td onclick="toggleBankPassword()"><label id="bank-password-display"
+                                                                  th:text="'●●●●●●●●●●'"></label>
+                            <span id="bank-password-icon-eye-off" data-feather="eye-off"></span>
+                            <span id="bank-password-icon-eye" data-feather="eye" style="display: none;"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

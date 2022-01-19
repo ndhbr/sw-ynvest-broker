@@ -16,8 +16,8 @@ public class BankAccount extends SingleIdEntity<String> {
     @Column(length=64)
     @NotBlank
     private String iban;
-    private String username; // TODO: Remove?
-    private String password; // TODO: Remove?
+    private String username;
+    private String password;
     private double balance = 0;
     private double virtualBalance = 0;
     @OneToOne(mappedBy = "bankAccount")

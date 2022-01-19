@@ -3,6 +3,7 @@ package de.ndhbr.ynvest.api.client;
 import de.ndhbr.ynvest.entity.OrderType;
 import de.ndhbr.ynvest.entity.StockOrder;
 import de.ndhbr.ynvest.exception.ServiceUnavailableException;
+import de.ndhbr.ynvest.util.Constants;
 import de.othr.sw.yetra.dto.OrderDTO;
 import de.othr.sw.yetra.dto.ShareDetailsDTO;
 import de.othr.sw.yetra.dto.TimePeriodDTO;
@@ -74,7 +75,7 @@ public class StockExchangeClient implements StockExchangeClientIF {
                                 .queryParam("filter", isins).build())
                         .retrieve()
                         .toEntity(Share[].class)
-                        .block();
+                        .block(Constants.WEBCLIENT_TIMEOUT);
             } catch (WebClientRequestException e) {
                 throw new ServiceUnavailableException(stockExchangeNotAvailable);
             }
@@ -106,7 +107,7 @@ public class StockExchangeClient implements StockExchangeClientIF {
                             .queryParam("timePeriod", timePeriod).build())
                     .retrieve()
                     .toEntity(ShareDetailsDTO.class)
-                    .block();
+                    .block(Constants.WEBCLIENT_TIMEOUT);
         } catch (WebClientRequestException e) {
             throw new ServiceUnavailableException(stockExchangeNotAvailable);
         }
@@ -136,7 +137,7 @@ public class StockExchangeClient implements StockExchangeClientIF {
                 .toEntity(ShareDetailsDTO.class)
                 .onErrorMap(WebClientRequestException.class,
                         e -> new ServiceUnavailableException(stockExchangeNotAvailable))
-                .block();
+                .block(Constants.WEBCLIENT_TIMEOUT);
 
         if (response != null && response.getStatusCode() == HttpStatus.OK) {
             ShareDetailsDTO share = response.getBody();
@@ -174,7 +175,7 @@ public class StockExchangeClient implements StockExchangeClientIF {
                 .toEntity(OrderDTO.class)
                 .onErrorMap(WebClientRequestException.class,
                         e -> new ServiceUnavailableException(stockExchangeNotAvailable))
-                .block();
+                .block(Constants.WEBCLIENT_TIMEOUT);
 
         if (response != null && response.getStatusCode() == HttpStatus.OK) {
             OrderDTO responseOrder = response.getBody();

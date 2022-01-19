@@ -1,10 +1,12 @@
 package de.ndhbr.ynvest.service.impl;
 
+import de.ndhbr.ynvest.api.client.BankClientIF;
 import de.ndhbr.ynvest.api.client.StockExchangeClientIF;
 import de.ndhbr.ynvest.entity.*;
 import de.ndhbr.ynvest.exception.ServiceUnavailableException;
 import de.ndhbr.ynvest.repository.OrderRepo;
 import de.ndhbr.ynvest.service.OrderServiceIF;
+import de.ndhbr.ynvest.util.Constants;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -14,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
-import java.util.logging.Logger;
 
 @Service
 @Scope("singleton")
@@ -30,7 +31,7 @@ public class OrderService implements OrderServiceIF {
     private StockExchangeClientIF stockExchange;
 
     @Autowired
-    private Logger logger;
+    private BankClientIF bankClient;
 
     @Override
     public Optional<StockOrder> findOrderById(Long orderId) {
@@ -44,12 +45,13 @@ public class OrderService implements OrderServiceIF {
 
     @Override
     @Transactional
-    public StockOrder completeOrderById(Long orderId) throws ServiceException {
+    public void completeOrderById(Long orderId) throws ServiceUnavailableException, ServiceException {
         Optional<StockOrder> foundOrder = findOrderById(orderId);
 
         if (foundOrder.isPresent()) {
             StockOrder order = foundOrder.get();
             Customer customer = order.getCustomer();
+            BankAccount bankAccount = customer.getBankAccount();
             Portfolio portfolio = customer.getPortfolio();
             Optional<Share> foundShare = portfolio
                     .getShareByIsin(order.getIsin());
@@ -76,15 +78,30 @@ public class OrderService implements OrderServiceIF {
                 portfolio.insertShare(share);
             }
 
-            // TODO: SCHNITTSTELLE ZU SINA BANK
-            //  Call Amann Bank to transfer money
-            // -> 0,99 ct to my bank account
-            // -> Amount to stock exchange (yetra)
+            bankClient.createTransfer(
+                    bankAccount.getIban(),
+                    Constants.YNVEST_IBAN,
+                    0.99,
+                    "ynvest - Order Fee #" + order.getOrderId()
+            );
+
+            if (order.getType() == OrderType.Buy) {
+                bankClient.createTransfer(
+                        bankAccount.getIban(),
+                        Constants.YNVEST_IBAN,
+                        order.getQuantity() * order.getUnitPrice(),
+                        "ynvest - Buy Order #" + order.getOrderId()
+                );
+            } else {
+                bankClient.createTransfer(
+                        Constants.YNVEST_IBAN,
+                        bankAccount.getIban(),
+                        order.getQuantity() * order.getUnitPrice(),
+                        "ynvest - Sell Order #" + order.getOrderId()
+                );
+            }
 
             portfolioService.savePortfolio(portfolio);
-
-            // TODO: not needed?
-            return orderRepo.save(order);
         } else {
             // TODO: Not found exception
             throw new ServiceException("Es wurde kein Auftrag mit der ID " + orderId + " gefunden");
@@ -92,6 +109,7 @@ public class OrderService implements OrderServiceIF {
     }
 
     @Override
+    @Transactional
     public StockOrder createOrder(StockOrder stockOrder, Customer customer) throws ServiceUnavailableException,
             ServiceException {
         Portfolio portfolio = customer.getPortfolio();
@@ -111,8 +129,6 @@ public class OrderService implements OrderServiceIF {
         double stockPrice = stockExchange.getSharePrice(stockOrder.getIsin());
         if (stockOrder.getUnitPrice() > stockPrice * 1.05 ||
                 stockOrder.getUnitPrice() < stockPrice * 0.95) {
-            System.out.println("StockOrder Price: " + stockOrder.getUnitPrice());
-            System.out.println("Current Price: " + stockPrice);
             throw new ServiceException("Der Auftragspreis hat sich in der Zwischenzeit verändert. Versuche es erneut.");
         }
 

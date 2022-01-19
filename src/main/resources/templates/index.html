@@ -52,6 +52,13 @@
                                 Aufträge
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/bank-account}"
+                               th:classappend="${#httpServletRequest.getRequestURI() == '/bank-account' ? 'active':''}">
+                                <span data-feather="link"></span>
+                                Bankkonto
+                            </a>
+                        </li>
                     </div>
 
                     <div sec:authorize="isAuthenticated() && hasRole('NOT_VERIFIED')">

@@ -12,4 +12,7 @@
             crossorigin="anonymous"></script>
     <script th:src="@{/js/share-chart.js}"></script>
     </span>
+    <span th:if="${#httpServletRequest.getRequestURI().startsWith('/bank-account')}">
+    <script th:src="@{/js/bank-account.js}"></script>
+    </span>
 </div>

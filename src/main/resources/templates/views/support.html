@@ -1,5 +1,72 @@
 <div th:fragment="support" class="p-3">
     <h1 class="h2">Support</h1>
-    <hr />
+    <p>Hast du noch Fragen? Bitte zögere nicht, uns
+        direkt zu kontaktieren. Unser Team wird sich innerhalb weniger
+        Stunden melden, um dir zu helfen.</p>
+    <hr/>
 
+    <div class="row">
+        <div class="col-md-9 mb-md-0 mb-5">
+            <form id="contact-form">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="md-form mb-3">
+                            <label for="name">Dein Name</label>
+                            <input type="text" id="name" name="name" class="form-control form-control-dark">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="md-form mb-3">
+                            <label for="email">Deine E-Mail Adresse</label>
+                            <input type="text" id="email" name="email" class="form-control form-control-dark">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="md-form mb-3">
+                            <label for="subject">Betreff</label>
+                            <input type="text" id="subject" name="subject" class="form-control form-control-dark">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="md-form mb-4">
+                            <label for="message">Dein Anliegen</label>
+                            <textarea type="text" id="message" name="message" rows="2"
+                                      class="form-control form-control-dark md-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="text-center text-md-left">
+                <a class="btn btn-lg btn-primary">Jetzt Anfragen</a>
+            </div>
+            <div class="status"></div>
+        </div>
+
+        <div class="col-md-3 text-center">
+            <ul class="list-unstyled mb-0">
+                <li>
+                    <span data-feather="map-pin" class="mb-2 feather-32"></span>
+                    <p>Regensburg 93047, Germany</p>
+                </li>
+
+                <li>
+                    <span data-feather="phone" class="mb-2 feather-32"></span>
+                    <p>+ 01 234 567 89</p>
+                </li>
+
+                <li>
+                    <span data-feather="mail" class="mb-2 feather-32"></span>
+                    <p>hello@ynvest.com</p>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>

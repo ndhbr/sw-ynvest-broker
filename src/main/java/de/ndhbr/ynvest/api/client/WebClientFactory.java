@@ -24,7 +24,8 @@ public class WebClientFactory {
     public WebClient getBankWebClient() {
         return generateWebClient()
                 .baseUrl("http://im-codd.oth-regensburg.de:8937/restapi")
-                .defaultHeaders(httpHeaders -> httpHeaders.setBasicAuth("ynvest", "123"))
+                .defaultHeaders(httpHeaders ->
+                        httpHeaders.setBasicAuth("ynvest@othr.de", "ynvest"))
                 .build();
     }
 

@@ -10,11 +10,18 @@ import java.util.Optional;
 
 public interface OrderServiceIF {
     Optional<StockOrder> findOrderById(Long orderId);
+
     StockOrder saveOrder(StockOrder stockOrder);
-    StockOrder completeOrderById(Long orderId) throws ServiceException;
+
+    void completeOrderById(Long orderId) throws ServiceUnavailableException, ServiceException;
+
     StockOrder createOrder(StockOrder stockOrder, Customer customer) throws ServiceUnavailableException;
+
     List<StockOrder> getOpenOrdersByIsin(Customer customer, String isin);
+
     double getSumOfOpenOrders(Customer customer);
+
     double getQuantityOfAllOpenSellOrders(Customer customer);
+
     Iterable<StockOrder> getAllOrders();
 }

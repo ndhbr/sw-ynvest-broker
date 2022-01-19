@@ -45,7 +45,6 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/orders", method = RequestMethod.POST)
-    @Transactional
     public String orderAction(@ModelAttribute("stockOrder") StockOrder stockOrder,
                               Locale locale, ModelMap model, Principal user) {
         String userId = SecurityContextHolder.getContext()

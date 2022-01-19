@@ -4,6 +4,7 @@ import de.ndhbr.ynvest.entity.Address;
 import de.ndhbr.ynvest.entity.BankAccount;
 import de.ndhbr.ynvest.entity.Customer;
 import de.ndhbr.ynvest.exception.ServiceUnavailableException;
+import de.ndhbr.ynvest.util.Constants;
 import eBank.DTO.BenutzerDTO;
 import eBank.DTO.KontoDTO;
 import eBank.DTO.UeberweisungDTO;
@@ -17,6 +18,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 
+import java.util.logging.Logger;
+
 @Component
 public class BankClient implements BankClientIF {
 
@@ -27,16 +30,24 @@ public class BankClient implements BankClientIF {
     @Qualifier("bank")
     WebClient webClient;
 
+    @Autowired
+    Logger logger;
+
     @Override
     public void createTransfer(String ibanSender, String ibanReceiver, double amount,
                                String purposeOfUse) throws ServiceUnavailableException,
             ServiceException {
-        ResponseEntity<UeberweisungDTO> response;
+        ResponseEntity<Void> response;
         UeberweisungDTO ueberweisungDTO = new UeberweisungDTO();
         ueberweisungDTO.setIbanSender(ibanSender);
         ueberweisungDTO.setIbanEmpfaenger(ibanReceiver);
         ueberweisungDTO.setBetrag(amount);
         ueberweisungDTO.setKommentar(purposeOfUse);
+
+        System.out.println(ueberweisungDTO.getIbanSender());
+        System.out.println(ueberweisungDTO.getIbanEmpfaenger());
+        System.out.println(ueberweisungDTO.getBetrag());
+        System.out.println(ueberweisungDTO.getKommentar());
 
         try {
             response = webClient
@@ -44,11 +55,11 @@ public class BankClient implements BankClientIF {
                     .uri(uriBuilder -> uriBuilder.path("/ueberweisung").build())
                     .body(Mono.just(ueberweisungDTO), UeberweisungDTO.class)
                     .retrieve()
-                    .toEntity(UeberweisungDTO.class)
-                    .block();
+                    .toBodilessEntity()
+                    .block(Constants.WEBCLIENT_TIMEOUT);
 
             if (response != null && response.getStatusCode() == HttpStatus.OK) {
-
+                logger.info("Überweisung vollständig - Auftrag abgeschlossen");
             } else {
                 throw new ServiceException("Bei der Überweisung der eBank ist ein Fehler aufgetreten");
             }
@@ -87,7 +98,7 @@ public class BankClient implements BankClientIF {
                     .body(Mono.just(benutzer), BenutzerDTO.class)
                     .retrieve()
                     .toEntity(KontoDTO.class)
-                    .block();
+                    .block(Constants.WEBCLIENT_TIMEOUT);
 
             if (response != null && response.getStatusCode() == HttpStatus.OK) {
                 KontoDTO konto = response.getBody();

@@ -37,7 +37,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 
     private static final String[] ALLOW_VERIFIED_ACCESS = {
             "/orders/**", "/portfolio/**", "/performance/**",
-            "/search/**"
+            "/search/**", "/bank-account/**"
     };
 
     @Autowired

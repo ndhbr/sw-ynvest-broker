@@ -7,6 +7,7 @@ import de.ndhbr.ynvest.repository.CustomerRepo;
 import de.ndhbr.ynvest.service.BankAccountServiceIF;
 import de.ndhbr.ynvest.service.CustomerServiceIF;
 import de.ndhbr.ynvest.service.PortfolioServiceIF;
+import de.ndhbr.ynvest.util.StringUtils;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -71,7 +72,10 @@ public class CustomerService implements CustomerServiceIF {
     @Override
     public Customer verifyCustomer(Customer customer) throws ServiceUnavailableException {
         // Create bank account
-        BankAccount bankAccount = bankClient.createBankAccount(new BankAccount(), customer);
+        BankAccount bankAccount = new BankAccount();
+        bankAccount.setUsername(customer.getEmail());
+        bankAccount.setPassword(StringUtils.generateRandomPassword(10));
+        bankAccount = bankClient.createBankAccount(bankAccount, customer);
         bankAccountService.saveBankAccount(bankAccount);
         customer.setBankAccount(bankAccount);
 
@@ -94,7 +98,8 @@ public class CustomerService implements CustomerServiceIF {
             }
 
             // If has enough money
-            if (bankAccount.getVirtualBalance() < (stockOrder.getUnitPrice() * stockOrder.getQuantity())) {
+            if (stockOrder.getType() == OrderType.Buy &&
+                    bankAccount.getVirtualBalance() < (stockOrder.getUnitPrice() * stockOrder.getQuantity())) {
                 throw new ServiceException("Du hast leider nicht genug Geld auf deinem Guthaben.");
             }
 

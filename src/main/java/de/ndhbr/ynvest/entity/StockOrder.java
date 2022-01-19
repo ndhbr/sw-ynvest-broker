@@ -117,7 +117,7 @@ public class StockOrder {
 
         if (orderDTO.getStatus() == de.othr.sw.yetra.entity.OrderStatus.OPEN) {
             setStatus(de.ndhbr.ynvest.entity.OrderStatus.Open);
-        } else {
+        } else if (orderDTO.getStatus() == de.othr.sw.yetra.entity.OrderStatus.CLOSED){
             setStatus(de.ndhbr.ynvest.entity.OrderStatus.Completed);
         }
     }

@@ -5,7 +5,7 @@
     <h1 class="h2">Aufträge</h1>
     <hr />
 
-    <div class="empty-list" th:if="${#lists.isEmpty(orders)}">
+    <div class="empty-list" th:if="${orders == null || #lists.isEmpty(orders)}">
         <span data-feather="shopping-cart"></span>
         <p>Noch keine Aufträge vorhanden</p>
     </div>

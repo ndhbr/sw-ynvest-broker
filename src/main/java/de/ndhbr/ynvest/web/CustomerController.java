@@ -1,6 +1,7 @@
 package de.ndhbr.ynvest.web;
 
 import de.ndhbr.ynvest.entity.Address;
+import de.ndhbr.ynvest.entity.BankAccount;
 import de.ndhbr.ynvest.entity.Customer;
 import de.ndhbr.ynvest.exception.ServiceUnavailableException;
 import de.ndhbr.ynvest.service.CustomerServiceIF;
@@ -62,6 +63,17 @@ public class CustomerController {
             model.addAttribute("content", "register");
         }
 
+        return "index";
+    }
+
+    @RequestMapping("/bank-account")
+    public String bankAccount(Locale locale, ModelMap model,
+                              @AuthenticationPrincipal Customer customer) {
+        Customer foundCustomer = customerService.getCustomerByEmail(customer.getEmail());
+        BankAccount bankAccount = foundCustomer.getBankAccount();
+
+        model.addAttribute("bankAccount", bankAccount);
+        model.addAttribute("content", "bank_account");
         return "index";
     }
 
