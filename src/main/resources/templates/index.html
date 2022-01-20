@@ -2,132 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/header :: header"></head>
 <body class="bg-dark">
-<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" th:href="@{/}">
-        <img th:src="@{/img/logo.svg}" alt="ynvest Logo"/>
-    </a>
-    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
-            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
-            aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <form class="search-form" th:method="get" th:action="@{/search}">
-        <div class="input-group">
-            <input type="text" class="form-control form-control-dark" placeholder="Suche"
-                   name="query" aria-label="Suche" min="3">
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="submit">
-                    <span data-feather="search"></span>
-                </button>
-            </div>
-        </div>
-    </form>
-</header>
+<div th:replace="fragments/search_bar :: search_bar"></div>
 
 <div class="container-fluid">
     <div class="row">
-        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
-            <div class="position-sticky pt-3">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" th:href="@{/}"
-                           th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'active':''}">
-                            <span data-feather="home"></span>
-                            Startseite
-                        </a>
-                    </li>
-
-                    <div sec:authorize="isAuthenticated() && hasRole('VERIFIED')">
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/portfolio}"
-                               th:classappend="${#httpServletRequest.getRequestURI() == '/portfolio' ? 'active':''}">
-                                <span data-feather="dollar-sign"></span>
-                                Depot
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/orders}"
-                               th:classappend="${#httpServletRequest.getRequestURI() == '/orders' ? 'active':''}">
-                                <span data-feather="shopping-cart"></span>
-                                Aufträge
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/bank-account}"
-                               th:classappend="${#httpServletRequest.getRequestURI() == '/bank-account' ? 'active':''}">
-                                <span data-feather="link"></span>
-                                Bankkonto
-                            </a>
-                        </li>
-                    </div>
-
-                    <div sec:authorize="isAuthenticated() && hasRole('NOT_VERIFIED')">
-                        <li class="nav-item">
-                            <a class="nav-link" th:href="@{/verify}"
-                               th:classappend="${#httpServletRequest.getRequestURI() == '/verify' ? 'active':''}">
-                                <span data-feather="check-square"></span>
-                                Verifizieren
-                            </a>
-                        </li>
-                    </div>
-
-                    <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link" th:href="@{/logout}">
-                            <span data-feather="log-out"></span>
-                            Ausloggen
-                        </a>
-                    </li>
-
-                    <li class="nav-item" sec:authorize="!isAuthenticated()">
-                        <a class="nav-link" th:href="@{/login}"
-                           th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}">
-                            <span data-feather="log-in"></span>
-                            Einloggen
-                        </a>
-                    </li>
-
-                    <h6 class="sidebar-heading d-flex px-3 mt-4 mb-1 text-muted">
-                        <span>Mehr</span>
-                    </h6>
-
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/faq}"
-                           th:classappend="${#httpServletRequest.getRequestURI() == '/faq' ? 'active':''}">
-                            <span data-feather="help-circle"></span>
-                            Häufige Fragen
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/support}"
-                           th:classappend="${#httpServletRequest.getRequestURI() == '/support' ? 'active':''}">
-                            <span data-feather="message-circle"></span>
-                            Support
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" th:href="@{/about}"
-                           th:classappend="${#httpServletRequest.getRequestURI() == '/about' ? 'active':''}">
-                            <span data-feather="users"></span>
-                            Über
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
+        <div th:replace="fragments/navbar :: navbar"></div>
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 bg-dark text-light">
-            <div class="small-dialog">
-                <div class="alert alert-primary show p-3 mt-3" role="alert" th:if="${primary}">
-                    <label th:text="${primary}"></label>
-                </div>
-                <div class="alert alert-success show p-3 mt-3" role="alert" th:if="${success}">
-                    <label th:text="${success}"></label>
-                </div>
-                <div class="alert alert-danger show p-3 mt-3" role="alert" th:if="${error}">
-                    <label th:text="${error}"></label>
-                </div>
-            </div>
-
+            <div th:replace="fragments/alerts :: alerts"></div>
             <div th:replace="@{'views/' + ${content}} :: ${content}" class="mb-5"></div>
         </main>
     </div>

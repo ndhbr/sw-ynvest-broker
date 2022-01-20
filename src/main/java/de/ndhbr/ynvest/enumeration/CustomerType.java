@@ -1,4 +1,4 @@
-package de.ndhbr.ynvest.entity;
+package de.ndhbr.ynvest.enumeration;
 
 public enum CustomerType {
     ROLE_NOT_VERIFIED,

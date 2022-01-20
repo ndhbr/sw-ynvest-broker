@@ -2,6 +2,8 @@ package de.ndhbr.ynvest.service.impl;
 
 import de.ndhbr.ynvest.api.client.BankClientIF;
 import de.ndhbr.ynvest.entity.*;
+import de.ndhbr.ynvest.enumeration.CustomerType;
+import de.ndhbr.ynvest.enumeration.OrderType;
 import de.ndhbr.ynvest.exception.ServiceUnavailableException;
 import de.ndhbr.ynvest.repository.CustomerRepo;
 import de.ndhbr.ynvest.service.BankAccountServiceIF;

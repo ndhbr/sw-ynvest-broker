@@ -2,6 +2,7 @@ package de.ndhbr.ynvest.entity;
 
 import com.sun.istack.NotNull;
 import de.ndhbr.ynvest.entity.util.SingleIdEntity;
+import de.ndhbr.ynvest.enumeration.CustomerType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

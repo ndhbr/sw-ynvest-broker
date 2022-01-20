@@ -3,6 +3,7 @@ package de.ndhbr.ynvest.service.impl;
 import de.ndhbr.ynvest.api.client.BankClientIF;
 import de.ndhbr.ynvest.api.client.StockExchangeClientIF;
 import de.ndhbr.ynvest.entity.*;
+import de.ndhbr.ynvest.enumeration.OrderType;
 import de.ndhbr.ynvest.exception.ServiceUnavailableException;
 import de.ndhbr.ynvest.repository.OrderRepo;
 import de.ndhbr.ynvest.service.OrderServiceIF;
@@ -98,7 +99,10 @@ public class OrderService implements OrderServiceIF {
                 share = foundShare.get();
 
                 switch (order.getType()) {
-                    case Buy -> share.increaseQuantity(order.getQuantity());
+                    case Buy -> {
+                        share.calculateNewPurchasePrice(order.getUnitPrice(), order.getQuantity());
+                        share.increaseQuantity(order.getQuantity());
+                    }
                     case Sell -> share.decreaseQuantity(order.getQuantity());
                 }
 
@@ -111,6 +115,7 @@ public class OrderService implements OrderServiceIF {
                 share = new Share();
                 share.setIsin(order.getIsin());
                 share.setQuantity(order.getQuantity());
+                share.setPurchasePrice(order.getUnitPrice());
 
                 portfolio.insertShare(share);
             }

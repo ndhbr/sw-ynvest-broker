@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<div th:fragment="alerts">
+    <div class="small-dialog">
+        <div class="alert alert-primary show p-3 mt-3" role="alert" th:if="${primary}">
+            <label th:text="${primary}"></label>
+        </div>
+        <div class="alert alert-success show p-3 mt-3" role="alert" th:if="${success}">
+            <label th:text="${success}"></label>
+        </div>
+        <div class="alert alert-danger show p-3 mt-3" role="alert" th:if="${error}">
+            <label th:text="${error}"></label>
+        </div>
+    </div>
+</div>
+</body>
+</html>

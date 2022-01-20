@@ -2,6 +2,8 @@ package de.ndhbr.ynvest.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
+import de.ndhbr.ynvest.enumeration.OrderStatus;
+import de.ndhbr.ynvest.enumeration.OrderType;
 import de.othr.sw.yetra.dto.OrderDTO;
 
 import javax.persistence.*;
@@ -116,9 +118,9 @@ public class StockOrder {
         setUnitPrice(orderDTO.getUnitPrice());
 
         if (orderDTO.getStatus() == de.othr.sw.yetra.entity.OrderStatus.OPEN) {
-            setStatus(de.ndhbr.ynvest.entity.OrderStatus.Open);
+            setStatus(OrderStatus.Open);
         } else if (orderDTO.getStatus() == de.othr.sw.yetra.entity.OrderStatus.CLOSED){
-            setStatus(de.ndhbr.ynvest.entity.OrderStatus.Completed);
+            setStatus(OrderStatus.Completed);
         }
     }
 }

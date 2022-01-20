@@ -32,4 +32,15 @@ public class MathUtils {
 
         return difference;
     }
+
+    // Calculates the percent difference of two values
+    public static double calculateRoundedDifferenceBetweenTwoValues(double a, double b) {
+        if (a <= 0 || b <= 0) return 0.0;
+        double difference = b / a;
+        difference -= 1;
+        difference *= 100;
+        difference = MathUtils.round(difference, 2);
+
+        return difference;
+    }
 }

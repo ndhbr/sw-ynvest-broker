@@ -1,12 +1,12 @@
-package de.ndhbr.ynvest.entity;
+package de.ndhbr.ynvest.enumeration;
 
-public enum OrderStatus {
-    Open("Offen"),
-    Completed("Abgeschlossen");
+public enum OrderType {
+    Buy("Kauf"),
+    Sell("Verkauf");
 
     private final String name;
 
-    OrderStatus(String name) {
+    OrderType(String name) {
         this.name = name;
     }
 

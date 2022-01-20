@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<div th:fragment="navbar">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+        <div class="position-sticky pt-3">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" th:href="@{/}"
+                       th:classappend="${#httpServletRequest.getRequestURI() == '/' ? 'active':''}">
+                        <span data-feather="home"></span>
+                        Startseite
+                    </a>
+                </li>
+
+                <div sec:authorize="isAuthenticated() && hasRole('VERIFIED')">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/portfolio}"
+                           th:classappend="${#httpServletRequest.getRequestURI() == '/portfolio' ? 'active':''}">
+                            <span data-feather="dollar-sign"></span>
+                            Depot
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/orders}"
+                           th:classappend="${#httpServletRequest.getRequestURI() == '/orders' ? 'active':''}">
+                            <span data-feather="shopping-cart"></span>
+                            Aufträge
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/bank-account}"
+                           th:classappend="${#httpServletRequest.getRequestURI() == '/bank-account' ? 'active':''}">
+                            <span data-feather="link"></span>
+                            Bankkonto
+                        </a>
+                    </li>
+                </div>
+
+                <div sec:authorize="isAuthenticated() && hasRole('NOT_VERIFIED')">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/verify}"
+                           th:classappend="${#httpServletRequest.getRequestURI() == '/verify' ? 'active':''}">
+                            <span data-feather="check-square"></span>
+                            Verifizieren
+                        </a>
+                    </li>
+                </div>
+
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" th:href="@{/logout}">
+                        <span data-feather="log-out"></span>
+                        Ausloggen
+                    </a>
+                </li>
+
+                <li class="nav-item" sec:authorize="!isAuthenticated()">
+                    <a class="nav-link" th:href="@{/login}"
+                       th:classappend="${#httpServletRequest.getRequestURI() == '/login' ? 'active':''}">
+                        <span data-feather="log-in"></span>
+                        Einloggen
+                    </a>
+                </li>
+
+                <h6 class="sidebar-heading d-flex px-3 mt-4 mb-1 text-muted">
+                    <span>Mehr</span>
+                </h6>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/faq}"
+                       th:classappend="${#httpServletRequest.getRequestURI() == '/faq' ? 'active':''}">
+                        <span data-feather="help-circle"></span>
+                        Häufige Fragen
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/support}"
+                       th:classappend="${#httpServletRequest.getRequestURI() == '/support' ? 'active':''}">
+                        <span data-feather="message-circle"></span>
+                        Support
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/about}"
+                       th:classappend="${#httpServletRequest.getRequestURI() == '/about' ? 'active':''}">
+                        <span data-feather="users"></span>
+                        Über
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+</body>
+</html>

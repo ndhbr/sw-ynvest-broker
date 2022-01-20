@@ -1,10 +1,10 @@
 package de.ndhbr.ynvest.entity;
 
-import com.sun.istack.NotNull;
 import org.hibernate.service.spi.ServiceException;
 
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Embeddable
 public class Share {
@@ -12,6 +12,8 @@ public class Share {
     private String isin;
     @NotNull
     private int quantity;
+    @NotNull
+    private double purchasePrice;
 
     public String getIsin() {
         return isin;
@@ -39,5 +41,18 @@ public class Share {
         }
 
         this.quantity -= quantity;
+    }
+
+    public double getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public void setPurchasePrice(double purchasePrice) {
+        this.purchasePrice = purchasePrice;
+    }
+
+    public void calculateNewPurchasePrice(double newPurchasePrice, int quantity) {
+        this.purchasePrice = ((this.purchasePrice * this.quantity) +
+                newPurchasePrice * quantity) / (this.quantity + quantity);
     }
 }

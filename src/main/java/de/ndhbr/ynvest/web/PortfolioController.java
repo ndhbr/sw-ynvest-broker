@@ -45,7 +45,10 @@ public class PortfolioController {
 
         if (portfolio != null) {
             List<Share> shares = portfolio.getShares();
+            List<Double> shareDifferences = new ArrayList<>();
             double portfolioValue = 0.0;
+            double portfolioValuePurchase = 0.0;
+            double difference = 0.0;
 
             try {
                 List<de.othr.sw.yetra.entity.Share> detailedShares = stockExchange.getSharesByIsins(
@@ -56,16 +59,27 @@ public class PortfolioController {
                     for (int i = 0; i < shares.size(); i++) {
                         portfolioValue += detailedShares.get(i).getCurrentPrice() *
                                 shares.get(i).getQuantity();
-                    }
-                }
+                        portfolioValuePurchase += shares.get(i).getPurchasePrice() * shares.get(i).getQuantity();
 
+                        shareDifferences.add(
+                                MathUtils.calculateRoundedDifferenceBetweenTwoValues(
+                                        shares.get(i).getPurchasePrice(), detailedShares.get(i).getCurrentPrice()
+                                )
+                        );
+                    }
+
+                    difference = MathUtils.calculateRoundedDifferenceBetweenTwoValues(
+                            portfolioValuePurchase, portfolioValue);
+                }
                 model.addAttribute("shareDetails", detailedShares);
             } catch (ServiceUnavailableException | ServiceException e) {
                 model.addAttribute("error", e.getMessage());
             }
 
             model.addAttribute("shares", portfolio.getShares());
+            model.addAttribute("shareDifferences", shareDifferences);
             model.addAttribute("portfolioValue", portfolioValue);
+            model.addAttribute("portfolioValueDifference", difference);
         }
 
         if (bankAccount != null) {

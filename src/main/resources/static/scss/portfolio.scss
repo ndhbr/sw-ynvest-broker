@@ -13,10 +13,12 @@ td {
     padding-left: 8px;
 }
 
+small.stock-positive,
 span.stock-positive {
     color: var(--bs-primary);
 }
 
+small.stock-negative,
 span.stock-negative {
     color: var(--bs-red);
 }

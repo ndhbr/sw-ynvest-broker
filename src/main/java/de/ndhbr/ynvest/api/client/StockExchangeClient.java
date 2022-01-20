@@ -1,6 +1,6 @@
 package de.ndhbr.ynvest.api.client;
 
-import de.ndhbr.ynvest.entity.OrderType;
+import de.ndhbr.ynvest.enumeration.OrderType;
 import de.ndhbr.ynvest.entity.StockOrder;
 import de.ndhbr.ynvest.exception.ServiceUnavailableException;
 import de.ndhbr.ynvest.util.Constants;

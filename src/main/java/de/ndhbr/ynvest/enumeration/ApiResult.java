@@ -1,4 +1,4 @@
-package de.ndhbr.ynvest.api;
+package de.ndhbr.ynvest.enumeration;
 
 public enum ApiResult {
     Success,

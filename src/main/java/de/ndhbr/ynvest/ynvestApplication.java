@@ -1,7 +1,7 @@
 package de.ndhbr.ynvest;
 
 import de.ndhbr.ynvest.entity.Customer;
-import de.ndhbr.ynvest.entity.CustomerType;
+import de.ndhbr.ynvest.enumeration.CustomerType;
 import de.ndhbr.ynvest.service.CustomerServiceIF;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
