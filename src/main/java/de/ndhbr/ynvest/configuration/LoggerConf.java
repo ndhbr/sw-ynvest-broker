@@ -8,6 +8,10 @@ import java.util.logging.Logger;
 
 @Configuration
 public class LoggerConf {
+
+    /**
+     * @return instance of ynvest Logger
+     */
     @Bean
     public Logger getLogger() {
         return Logger.getLogger(Constants.LOGGER);

@@ -11,6 +11,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientFactory {
 
+    /**
+     * @return instance of
+     */
     @Bean
     @Scope("singleton")
     @Qualifier("stockExchange")

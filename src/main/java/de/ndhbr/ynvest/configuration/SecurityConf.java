@@ -18,23 +18,36 @@ import java.util.stream.Stream;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConf extends WebSecurityConfigurerAdapter {
 
+    /**
+     * Those paths are available for every user
+     */
     public static final String[] STATIC_PATHS = {
             "/style/**", "/js/**", "/img/**", "/fonts/**"
     };
-
-    public static final String[] ALLOW_API_ACCESS = {
-            "/api/**"
-    };
-
     private static final String[] ALLOW_ACCESS_WITHOUT_AUTHENTICATION = {
             "/", "/login", "/error", "/register", "/faq", "/support",
             "/about"
     };
 
+    /**
+     * Those paths are only available for API Access
+     */
+    public static final String[] ALLOW_API_ACCESS = {
+            "/api/**"
+    };
+
+    /**
+     * Those paths are only available if the user is
+     * authenticated, but not verified
+     */
     private static final String[] ALLOW_NON_VERIFIED_ACCESS = {
             "/verify/**"
     };
 
+    /**
+     * Those paths are only available if the user is
+     * authenticated and verified
+     */
     private static final String[] ALLOW_VERIFIED_ACCESS = {
             "/orders/**", "/portfolio/**", "/performance/**",
             "/search/**", "/bank-account/**"

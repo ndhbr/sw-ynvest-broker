@@ -32,5 +32,8 @@ zu handeln.
   Dateien (*.scss) mittels eines Frontend Maven Plugins,
   welches vor dem Startup der Applikation die nötigen Dependencies
   über NPM installiert und schließlich die Dateien kompiliert.
-- Auf einen bereitgestellten Testnutzer wurde verzichtet,
-  um den Registrierprozess mit Verifizierung zu verdeutlichen.
+- Als Testnutzer können Sie folgenden Account nutzen:
+  - E-Mail: testnutzer@ndhbr.de
+  - Passwort: 12345
+  - Der Registrierungsprozess sollte aufgrund des Verifizierungs
+    prozesses trotzdem getestet werden
