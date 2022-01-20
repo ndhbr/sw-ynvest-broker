@@ -7,16 +7,19 @@ import de.ndhbr.ynvest.exception.ServiceUnavailableException;
 import de.ndhbr.ynvest.repository.OrderRepo;
 import de.ndhbr.ynvest.service.OrderServiceIF;
 import de.ndhbr.ynvest.util.Constants;
+import de.othr.sw.yetra.dto.OrderDTO;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.logging.Logger;
 
 @Service
 @Scope("singleton")
@@ -34,6 +37,9 @@ public class OrderService implements OrderServiceIF {
     @Autowired
     private BankClientIF bankClient;
 
+    @Autowired
+    Logger logger;
+
     @Override
     public Optional<StockOrder> findOrderById(Long orderId) {
         return orderRepo.findById(orderId);
@@ -49,6 +55,29 @@ public class OrderService implements OrderServiceIF {
     @Override
     public StockOrder saveOrder(StockOrder stockOrder) {
         return orderRepo.save(stockOrder);
+    }
+
+    @Override
+    @JmsListener(destination = Constants.ORDER_QUEUE)
+    public void receiveOrderUpdate(OrderDTO orderDTO) {
+        StockOrder order;
+
+        if (orderDTO != null) {
+            Optional<StockOrder> optionalOrder = findOrderById(orderDTO.getId());
+
+            if (optionalOrder.isPresent()) {
+                order = optionalOrder.get();
+                order.mergeWith(orderDTO);
+
+                saveOrder(order);
+
+                try {
+                    completeOrderById(order.getOrderId());
+                } catch (ServiceUnavailableException | ServiceException e) {
+                    logger.warning(e.getMessage());
+                }
+            }
+        }
     }
 
     @Override

@@ -1,6 +1,5 @@
 package de.ndhbr.ynvest.api;
 
-import de.ndhbr.ynvest.entity.BankAccount;
 import de.ndhbr.ynvest.service.BankAccountServiceIF;
 import de.ndhbr.ynvest.service.OrderServiceIF;
 import eBank.DTO.KontoDTO;
@@ -32,15 +31,8 @@ public class ApiController {
         ApiResponse result;
 
         try {
-            BankAccount foundBankAccount =
-                    bankAccountService.getBankAccountByIban(iban);
-            double newVirtualBalance = konto.getKontostand() -
-                    orderService.getSumOfOpenOrders(foundBankAccount.getCustomer());
+            bankAccountService.updateBankAccountBalance(iban, konto);
 
-            foundBankAccount.setBalance(konto.getKontostand());
-            foundBankAccount.setVirtualBalance(newVirtualBalance);
-
-            bankAccountService.saveBankAccount(foundBankAccount);
             response.setStatus(HttpServletResponse.SC_OK);
             result = new ApiResponse(ApiResult.Success, "Kontostand wurde aktualisiert.");
         } catch (ServiceException e) {

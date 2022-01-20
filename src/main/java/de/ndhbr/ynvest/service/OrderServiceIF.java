@@ -3,6 +3,7 @@ package de.ndhbr.ynvest.service;
 import de.ndhbr.ynvest.entity.Customer;
 import de.ndhbr.ynvest.entity.StockOrder;
 import de.ndhbr.ynvest.exception.ServiceUnavailableException;
+import de.othr.sw.yetra.dto.OrderDTO;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.data.domain.Page;
 
@@ -15,6 +16,8 @@ public interface OrderServiceIF {
     Page<StockOrder> getOrders(Customer customer, int page);
 
     StockOrder saveOrder(StockOrder stockOrder);
+
+    void receiveOrderUpdate(OrderDTO orderDTO);
 
     void completeOrderById(Long orderId) throws ServiceUnavailableException, ServiceException;
 
