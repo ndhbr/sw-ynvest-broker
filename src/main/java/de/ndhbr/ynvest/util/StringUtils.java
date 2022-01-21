@@ -4,6 +4,11 @@ import java.util.Random;
 
 public class StringUtils {
 
+    /**
+     * Generates a random password
+     * @param length Length of password
+     * @return Random string
+     */
     public static String generateRandomPassword(int length) {
         Random random = new Random();
         StringBuilder sb = new StringBuilder(length);

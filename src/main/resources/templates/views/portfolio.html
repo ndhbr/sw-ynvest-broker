@@ -19,6 +19,9 @@
                 <label th:text="${#numbers.formatDecimal(bankAccount?.getRoundedVirtualBalance(), 1, 'POINT', 2, 'COMMA')}">
                 </label> €
             </p>
+
+            <img th:src="@{/img/stocks.svg}" class="mt-5 px-5 d-block mx-auto"
+                 style="max-height: 150px;" alt="Portfolio"/>
         </div>
         <div id="portfolio-values" class="col-lg-8 px-3">
             <h2 class="h3">Wertpapiere</h2>

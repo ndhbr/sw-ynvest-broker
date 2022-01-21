@@ -8,7 +8,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class MathUtils {
-    // Round double to number of places
+    /**
+     * Round double to number of places
+     * @param value Value to round
+     * @param places Number of places
+     * @return Rounded value
+     */
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
@@ -17,7 +22,11 @@ public class MathUtils {
         return bd.doubleValue();
     }
 
-    // Calculates the percent difference of a collection of markt values
+    /**
+     * Calculates the percent difference of a collection of markt values
+     * @param marketValues List of market values
+     * @return Difference
+     */
     public static double calculateRoundedDifferenceOfMarktValues(Collection<MarketValueDTO> marketValues) {
         ArrayList<MarketValueDTO> marketValueDTO = new ArrayList<>(marketValues);
         double difference = 0.0;
@@ -33,7 +42,12 @@ public class MathUtils {
         return difference;
     }
 
-    // Calculates the percent difference of two values
+    /**
+     * Calculates the percent difference of two values
+     * @param a Value 1
+     * @param b Value 2
+     * @return Difference
+     */
     public static double calculateRoundedDifferenceBetweenTwoValues(double a, double b) {
         if (a <= 0 || b <= 0) return 0.0;
         double difference = b / a;

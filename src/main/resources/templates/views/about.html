@@ -1,4 +1,31 @@
 <div th:fragment="about" class="p-3">
     <h1 class="h2">Über uns</h1>
-    <hr />
+    <hr/>
+
+    <div class="bg-dark">
+        <div class="container py-5">
+            <div class="row h-100 align-items-center py-5">
+                <div class="col-lg-6">
+                    <h1 class="display-4">ynvest</h1>
+                    <p class="lead text-muted mb-0">
+                        Mehr als nur eine Vision: Mit ynvest kannst du
+                        deine Altersvorsorge aufbauen!
+                    </p>
+                    <p class="lead text-muted">
+                        By <a href="https://ndhbr.de" class="text-muted">
+                        <u>ndhbr.de</u></a>
+                    </p>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block">
+                    <img th:src="@{/img/investing.svg}" class="img-fluid" alt="Investing"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark pb-5">
+        <div class="container text-center">
+            <p class="font-italic text-muted mb-0">&copy; Copyrights ynvest All rights reserved.</p>
+        </div>
+    </footer>
 </div>

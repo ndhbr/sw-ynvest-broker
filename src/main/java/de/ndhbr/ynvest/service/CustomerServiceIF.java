@@ -9,8 +9,12 @@ import java.util.List;
 
 public interface CustomerServiceIF extends UserDetailsService {
     Customer getCustomerByEmail(String email);
+
     Customer registerCustomer(Customer customer) throws ServiceUnavailableException;
+
     Customer verifyCustomer(Customer customer) throws ServiceUnavailableException;
+
     void addOrder(StockOrder stockOrder, Customer customer);
+
     List<StockOrder> getOrders(Customer customer);
 }

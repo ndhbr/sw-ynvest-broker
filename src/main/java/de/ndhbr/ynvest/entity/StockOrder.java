@@ -1,13 +1,13 @@
 package de.ndhbr.ynvest.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sun.istack.NotNull;
 import de.ndhbr.ynvest.enumeration.OrderStatus;
 import de.ndhbr.ynvest.enumeration.OrderType;
 import de.othr.sw.yetra.dto.OrderDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneOffset;

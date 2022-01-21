@@ -20,10 +20,12 @@ public class AlertInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response,
                            Object handler, ModelAndView modelAndView) {
+        // For APIs
         if (modelAndView == null) {
             return;
         }
 
+        // Verified check
         if (request.isUserInRole("ROLE_NOT_VERIFIED")) {
             modelAndView.addObject("primary", "Du bist noch nicht verifiziert! " +
                     "Vervollständige deine Daten, um deinen ersten Wertpapierhandel tätigen zu können.");

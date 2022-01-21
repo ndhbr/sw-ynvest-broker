@@ -4,6 +4,9 @@ import de.ndhbr.ynvest.enumeration.ApiResult;
 
 import java.io.Serializable;
 
+/**
+ * API Response class for REST interface
+ */
 public class ApiResponseDTO implements Serializable {
     private final ApiResult result;
     private final String message;

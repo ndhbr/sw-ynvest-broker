@@ -72,6 +72,10 @@ public class Portfolio {
         this.shares.add(share);
     }
 
+    /**
+     * Inserts of updates specific share
+     * @param share Share object
+     */
     public void updateShare(Share share) {
         if (this.shares == null) {
             this.insertShare(share);
